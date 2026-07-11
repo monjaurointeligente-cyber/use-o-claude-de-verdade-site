@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrar — Use o Claude de Verdade</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="app-shell">
+
+<div class="auth-card">
+  <h1>Use o Claude de Verdade</h1>
+
+  <div id="login-form">
+    <div class="field">
+      <label for="login-email">E-mail</label>
+      <input type="email" id="login-email" placeholder="voce@email.com">
+    </div>
+    <div class="field">
+      <label for="login-password">Senha</label>
+      <input type="password" id="login-password" placeholder="Sua senha">
+    </div>
+    <button class="btn btn-primary btn-block" id="btn-login">Entrar</button>
+    <div class="form-msg" id="login-msg"></div>
+    <div class="auth-switch">
+      Comprou o curso e ainda não criou sua senha?
+      <a href="#" id="show-signup">Criar acesso</a>
+    </div>
+  </div>
+
+  <div id="signup-form" style="display:none;">
+    <div class="field">
+      <label for="signup-email">E-mail usado na compra</label>
+      <input type="email" id="signup-email" placeholder="voce@email.com">
+    </div>
+    <div class="field">
+      <label for="signup-password">Crie uma senha</label>
+      <input type="password" id="signup-password" placeholder="Mínimo 6 caracteres">
+    </div>
+    <button class="btn btn-primary btn-block" id="btn-signup">Criar acesso</button>
+    <div class="form-msg" id="signup-msg"></div>
+    <div class="auth-switch">
+      Já tem senha? <a href="#" id="show-login">Voltar pro login</a>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { supabase } from "./supabase-client.js";
+
+  const loginForm = document.getElementById('login-form');
+  const signupForm = document.getElementById('signup-form');
+  document.getElementById('show-signup').onclick = (e) => { e.preventDefault(); loginForm.style.display='none'; signupForm.style.display='block'; };
+  document.getElementById('show-login').onclick = (e) => { e.preventDefault(); signupForm.style.display='none'; loginForm.style.display='block'; };
+
+  document.getElementById('btn-login').onclick = async () => {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const msg = document.getElementById('login-msg');
+    msg.textContent = 'Entrando...'; msg.className = 'form-msg';
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      msg.textContent = 'E-mail ou senha incorretos.';
+      msg.className = 'form-msg error';
+      return;
+    }
+    window.location.href = 'dashboard.html';
+  };
+
+  document.getElementById('btn-signup').onclick = async () => {
+    const email = document.getElementById('signup-email').value.trim();
+    const password = document.getElementById('signup-password').value;
+    const msg = document.getElementById('signup-msg');
+    if (password.length < 6) {
+      msg.textContent = 'A senha precisa ter pelo menos 6 caracteres.';
+      msg.className = 'form-msg error';
+      return;
+    }
+    msg.textContent = 'Criando acesso...'; msg.className = 'form-msg';
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) {
+      msg.textContent = 'Não foi possível criar o acesso: ' + error.message;
+      msg.className = 'form-msg error';
+      return;
+    }
+    msg.textContent = 'Conta criada! Verifique seu e-mail se for solicitado, depois faça login.';
+    msg.className = 'form-msg ok';
+  };
+</script>
+</body>
+</html>
