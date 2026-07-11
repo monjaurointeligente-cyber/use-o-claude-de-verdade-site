@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aula — Use o Claude de Verdade</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="app-shell">
+
+<nav class="app-nav">
+  <div class="logo">Use o Claude de Verdade</div>
+  <a href="#" class="logout" id="btn-logout">Sair</a>
+</nav>
+
+<main class="app-main" id="main-content">
+  <p>Carregando...</p>
+</main>
+
+<script type="module">
+  import { supabase, requireSession, logout } from "./supabase-client.js";
+
+  document.getElementById('btn-logout').onclick = (e) => { e.preventDefault(); logout(); };
+
+  const main = document.getElementById('main-content');
+  const params = new URLSearchParams(window.location.search);
+  const num = parseInt(params.get('num'), 10);
+
+  async function init() {
+    const session = await requireSession();
+    if (!session) return;
+
+    if (!num) {
+      main.innerHTML = '<p>Aula não encontrada. <a href="dashboard.html">Voltar ao painel</a>.</p>';
+      return;
+    }
+
+    const { data: aula, error } = await supabase
+      .from('aulas')
+      .select('num, titulo, conteudo_html, trilha_num')
+      .eq('num', num)
+      .maybeSingle();
+
+    if (error || !aula) {
+      main.innerHTML = '<p>Não foi possível carregar esta aula. Verifique se seu acesso está ativo. <a href="dashboard.html">Voltar ao painel</a>.</p>';
+      return;
+    }
+
+    const { data: prog } = await supabase
+      .from('progresso')
+      .select('aula_num')
+      .eq('user_id', session.user.id)
+      .eq('aula_num', num)
+      .maybeSingle();
+
+    const jaConcluida = !!prog;
+
+    main.innerHTML = `
+      <a href="dashboard.html" style="color:var(--cinza); text-decoration:none; font-size:0.9rem;">&larr; Voltar ao painel</a>
+      <h1 style="margin-top:12px;">Aula ${aula.num} — ${aula.titulo}</h1>
+      <div class="lesson-content">${aula.conteudo_html}</div>
+      <button class="btn ${jaConcluida ? 'btn-secondary' : 'btn-primary'}" id="btn-concluir" style="margin-top:24px;">
+        ${jaConcluida ? '✓ Aula concluída' : 'Marcar como concluída'}
+      </button>
+      <div style="margin-top:20px; display:flex; justify-content:space-between;">
+        ${num > 1 ? `<a href="aula.html?num=${num - 1}" class="btn btn-secondary">&larr; Aula anterior</a>` : '<span></span>'}
+        <a href="aula.html?num=${num + 1}" class="btn btn-secondary">Próxima aula &rarr;</a>
+      </div>
+    `;
+
+    if (!jaConcluida) {
+      document.getElementById('btn-concluir').onclick = async () => {
+        await supabase.from('progresso').upsert({ user_id: session.user.id, aula_num: num });
+        window.location.reload();
+      };
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>
