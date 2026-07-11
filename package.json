@@ -1,0 +1,9 @@
+{
+  "name": "use-o-claude-de-verdade-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site de vendas + área de membros do curso Use o Claude de Verdade",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  }
+}
