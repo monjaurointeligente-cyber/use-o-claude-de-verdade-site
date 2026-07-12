@@ -5,85 +5,101 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Meu curso — Use o Claude de Verdade</title>
 <link rel="stylesheet" href="../css/style.css">
+<style>
+.aula-row.locked { opacity: 0.55; cursor: not-allowed; pointer-events: none; }
+.aula-row .lock-icon { margin-left: 8px; }
+</style>
 </head>
 <body class="app-shell">
 
 <nav class="app-nav">
-  <div class="logo">Use o Claude de Verdade</div>
-  <a href="#" class="logout" id="btn-logout">Sair</a>
+<div class="logo">Use o Claude de Verdade</div>
+<a href="#" class="logout" id="btn-logout">Sair</a>
 </nav>
 
 <main class="app-main" id="main-content">
-  <p>Carregando...</p>
+<p>Carregando...</p>
 </main>
 
 <script type="module">
-  import { supabase, requireSession, logout } from "./supabase-client.js";
+import { supabase, requireSession, logout } from "./supabase-client.js";
 
-  document.getElementById('btn-logout').onclick = (e) => { e.preventDefault(); logout(); };
+document.getElementById('btn-logout').onclick = (e) => { e.preventDefault(); logout(); };
 
-  const main = document.getElementById('main-content');
+const main = document.getElementById('main-content');
 
-  async function init() {
-    const session = await requireSession();
-    if (!session) return;
+async function init() {
+  const session = await requireSession();
+  if (!session) return;
 
-    // Checa status de acesso do aluno
-    const { data: acesso } = await supabase
-      .from('acessos')
-      .select('status')
-      .eq('user_id', session.user.id)
-      .maybeSingle();
+  const { data: acesso } = await supabase
+    .from('acessos')
+    .select('status')
+    .eq('user_id', session.user.id)
+    .maybeSingle();
 
-    if (!acesso || acesso.status !== 'ativo') {
-      main.innerHTML = `
-        <div class="auth-card" style="margin-top:40px;">
-          <h1>Acesso ainda não liberado</h1>
-          <p style="text-align:center;color:var(--cinza);">
-            Não encontramos uma compra ativa vinculada a este e-mail (${session.user.email}).
-            Se você já comprou, aguarde alguns minutos após a confirmação do pagamento e recarregue esta página.
-            Se o problema continuar, entre em contato com o suporte.
-          </p>
-        </div>`;
-      return;
-    }
-
-    // Busca trilhas, aulas e progresso em paralelo
-    const [{ data: trilhas }, { data: aulas }, { data: progresso }] = await Promise.all([
-      supabase.from('trilhas').select('*').order('num'),
-      supabase.from('aulas').select('num, trilha_num, titulo').order('num'),
-      supabase.from('progresso').select('aula_num').eq('user_id', session.user.id),
-    ]);
-
-    const concluidas = new Set((progresso || []).map(p => p.aula_num));
-    const totalAulas = (aulas || []).length;
-    const totalConcluidas = concluidas.size;
-
-    let html = `
-      <div style="margin-bottom:28px;">
-        <h1 style="margin-bottom:4px;">Suas aulas</h1>
-        <p style="color:var(--cinza);">${totalConcluidas} de ${totalAulas} aulas concluídas</p>
+  if (!acesso || acesso.status !== 'ativo') {
+    main.innerHTML = `
+      <div class="auth-card" style="margin-top:40px;">
+        <h1>Só um instante</h1>
+        <p style="text-align:center;color:var(--cinza);">
+          Estamos liberando seu acesso ao curso gratuito (${session.user.email}).
+          Isso costuma ser instantâneo — recarregue a página em alguns segundos.
+          Se continuar assim por mais de alguns minutos, fale com o suporte.
+        </p>
       </div>`;
+    return;
+  }
 
-    (trilhas || []).forEach(trilha => {
-      const aulasDaTrilha = (aulas || []).filter(a => a.trilha_num === trilha.num);
-      if (aulasDaTrilha.length === 0) return;
-      html += `<div class="trilha-block"><h2>Trilha ${trilha.num} — ${trilha.nome}</h2>`;
-      aulasDaTrilha.forEach(aula => {
-        const done = concluidas.has(aula.num);
+  const [{ data: trilhas }, { data: aulas }, { data: progresso }] = await Promise.all([
+    supabase.from('trilhas').select('*').order('num'),
+    supabase.from('aulas').select('num, trilha_num, titulo').order('num'),
+    supabase.from('progresso').select('aula_num').eq('user_id', session.user.id),
+  ]);
+
+  const concluidas = new Set((progresso || []).map(p => p.aula_num));
+  const totalAulas = (aulas || []).length;
+  const totalConcluidas = concluidas.size;
+
+  let proximaLiberada = 1;
+  for (let n = 1; n <= totalAulas; n++) {
+    if (concluidas.has(n)) proximaLiberada = n + 1; else break;
+  }
+
+  let html = `
+    <div style="margin-bottom:28px;">
+      <h1 style="margin-bottom:4px;">Suas aulas</h1>
+      <p style="color:var(--cinza);">${totalConcluidas} de ${totalAulas} aulas concluídas</p>
+    </div>`;
+
+  (trilhas || []).forEach(trilha => {
+    const aulasDaTrilha = (aulas || []).filter(a => a.trilha_num === trilha.num);
+    if (aulasDaTrilha.length === 0) return;
+    html += `<div class="trilha-block"><h2>Trilha ${trilha.num} — ${trilha.nome}</h2>`;
+    aulasDaTrilha.forEach(aula => {
+      const done = concluidas.has(aula.num);
+      const liberada = aula.num <= proximaLiberada;
+      if (liberada) {
         html += `
           <a class="aula-row" href="aula.html?num=${aula.num}">
             <span><span class="aula-num">Aula ${aula.num}</span><span class="aula-title">${aula.titulo}</span></span>
             <span class="check">${done ? '✓ concluída' : ''}</span>
           </a>`;
-      });
-      html += `</div>`;
+      } else {
+        html += `
+          <span class="aula-row locked" title="Termine as aulas anteriores (com o quiz) pra desbloquear">
+            <span><span class="aula-num">Aula ${aula.num}</span><span class="aula-title">${aula.titulo}</span></span>
+            <span class="check lock-icon">🔒</span>
+          </span>`;
+      }
     });
+    html += `</div>`;
+  });
 
-    main.innerHTML = html;
-  }
+  main.innerHTML = html;
+}
 
-  init();
+init();
 </script>
 </body>
 </html>
