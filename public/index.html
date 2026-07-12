@@ -1,352 +1,490 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" id="html-root">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Use o Claude de Verdade — Curso gratuito + biblioteca de ebooks práticos</title>
-<meta name="description" content="Aprenda a usar o Claude de verdade, do zero, de graça. Curso completo com 5 trilhas e 24 aulas + biblioteca de 13 ebooks práticos pra quem quer ir mais rápido.">
+<title id="page-title">Use o Claude de Verdade — Curso gratuito + biblioteca de ebooks práticos</title>
+<meta name="description" id="page-desc" content="Aprenda a usar o Claude de verdade, do zero, de graça. Curso completo com 5 trilhas e 24 aulas + biblioteca de 13 ebooks práticos pra quem quer ir mais rápido.">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/style-ebooks.css">
+<style>
+.btn-lang { background: var(--marrom); color: var(--branco); border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem; letter-spacing: 0.02em; transition: background-color 0.2s ease; }
+.btn-lang:hover { background: #1c1611; }
+.ebooks-en-soon { max-width: var(--max-width); margin: 0 auto; padding: 40px 32px; background: var(--branco); border-radius: 16px; text-align: center; }
+.ebooks-en-soon h3 { margin-top: 0; }
+</style>
 </head>
 <body>
 <header class="site-header">
-  <div class="logo">Use o Claude de Verdade</div>
-  <nav class="header-actions">
-    <a href="#ebooks" class="btn btn-ghost">Ver os 13 ebooks</a>
-    <a href="app/login.html" class="btn btn-secondary">Começar grátis</a>
-  </nav>
+<div class="logo">Use o Claude de Verdade</div>
+<nav class="header-actions">
+<button type="button" class="btn-lang" id="btn-lang">EN / PT</button>
+<a href="#ebooks" class="btn btn-ghost" data-i18n="nav.ebooks">Ver os 13 ebooks</a>
+<a href="app/login.html" class="btn btn-secondary" data-i18n="nav.start">Começar grátis</a>
+</nav>
 </header>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-blob" aria-hidden="true">
-    <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
-      <path fill="#C15F3C" opacity="0.16" d="M451,304Q437,358,398,398Q359,438,304,451Q249,464,197,441Q145,418,111,371Q77,324,84,264Q91,204,131,163Q171,122,225,101Q279,80,332,99Q385,118,417,163Q449,208,451,304Z"></path>
-      <path fill="#4C6B4F" opacity="0.14" d="M420,290Q414,350,368,383Q322,416,268,423Q214,430,175,392Q136,354,114,301Q92,248,120,197Q148,146,199,120Q250,94,301,111Q352,128,384,169Q416,210,420,290Z" transform="translate(60,10)"></path>
-    </svg>
-  </div>
-  <span class="badge-free">100% gratuito</span>
-  <h1>Aprenda a usar o Claude de verdade — do primeiro prompt ao negócio real</h1>
-  <p class="subtitle">Curso completo com 5 trilhas e 24 aulas, liberado de graça. Se quiser ir mais rápido em um problema específico, a biblioteca com 13 ebooks práticos resolve isso a partir de R$ 5.</p>
-  <div class="cta-row">
-    <a href="app/login.html" class="btn btn-primary">Começar agora, é grátis</a>
-    <a href="#ebooks" class="btn btn-secondary">Ver os 13 ebooks práticos</a>
-  </div>
+<div class="hero-blob" aria-hidden="true">
+<svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+<path fill="#C15F3C" opacity="0.16" d="M451,304Q437,358,398,398Q359,438,304,451Q249,464,197,441Q145,418,111,371Q77,324,84,264Q91,204,131,163Q171,122,225,101Q279,80,332,99Q385,118,417,163Q449,208,451,304Z"></path>
+<path fill="#4C6B4F" opacity="0.14" d="M420,290Q414,350,368,383Q322,416,268,423Q214,430,175,392Q136,354,114,301Q92,248,120,197Q148,146,199,120Q250,94,301,111Q352,128,384,169Q416,210,420,290Z" transform="translate(60,10)"></path>
+</svg>
+</div>
+<span class="badge-free" data-i18n="hero.badge">100% gratuito</span>
+<h1 data-i18n="hero.title">Aprenda a usar o Claude de verdade — do primeiro prompt ao negócio real</h1>
+<p class="subtitle" data-i18n="hero.subtitle">Curso completo com 5 trilhas e 24 aulas, liberado de graça. Se quiser ir mais rápido em um problema específico, a biblioteca com 13 ebooks práticos resolve isso a partir de R$ 5.</p>
+<div class="cta-row">
+<a href="app/login.html" class="btn btn-primary" data-i18n="hero.cta1">Começar agora, é grátis</a>
+<a href="#ebooks" class="btn btn-secondary" data-i18n="hero.cta2">Ver os 13 ebooks práticos</a>
+</div>
 </section>
 
 <!-- MINI CTA EBOOKS -->
 <section class="mini-cta">
-  <p><strong>Quer um atalho pra um problema específico?</strong> A biblioteca de ebooks resolve casos práticos — automação de WhatsApp, planilhas, copywriting e mais — a partir de <strong>R$ 5,00</strong>.</p>
-  <a href="#ebooks" class="btn btn-ebook">Explorar a biblioteca</a>
+<p data-i18n-html="mini.text"><strong>Quer um atalho pra um problema específico?</strong> A biblioteca de ebooks resolve casos práticos — automação de WhatsApp, planilhas, copywriting e mais — a partir de <strong>R$ 5,00</strong>.</p>
+<a href="#ebooks" class="btn btn-ebook" data-i18n="mini.cta">Explorar a biblioteca</a>
 </section>
 
 <!-- DOR -->
 <section>
-  <h2>Você reconhece algum desses casos?</h2>
-  <p class="section-lead">A maioria das pessoas usa 5% do que o Claude pode fazer.</p>
-  <div class="dor-grid">
-    <div class="dor-card">
-      <strong>Nunca usou Claude Code, Cowork ou Skills</strong>
-      <p>Sabe que existem, mas nunca colocou a mão na massa pra ver o que muda de verdade no dia a dia.</p>
-    </div>
-    <div class="dor-card">
-      <strong>Fica repetindo o mesmo prompt</strong>
-      <p>Reescreve a mesma instrução toda vez em vez de automatizar o processo de uma vez por todas.</p>
-    </div>
-    <div class="dor-card">
-      <strong>Tem uma ideia mas não sabe por onde começar</strong>
-      <p>Sente que dava pra transformar isso num produto ou serviço, mas trava na primeira etapa.</p>
-    </div>
-    <div class="dor-card">
-      <strong>Paga caro pela ferramenta errada</strong>
-      <p>Assina serviços que fazem menos do que o Claude já faz sozinho, de graça ou por muito menos.</p>
-    </div>
-  </div>
+<h2 data-i18n="dor.h2">Você reconhece algum desses casos?</h2>
+<p class="section-lead" data-i18n="dor.lead">A maioria das pessoas usa 5% do que o Claude pode fazer.</p>
+<div class="dor-grid">
+<div class="dor-card">
+<strong data-i18n="dor.1.t">Nunca usou Claude Code, Cowork ou Skills</strong>
+<p data-i18n="dor.1.p">Sabe que existem, mas nunca colocou a mão na massa pra ver o que muda de verdade no dia a dia.</p>
+</div>
+<div class="dor-card">
+<strong data-i18n="dor.2.t">Fica repetindo o mesmo prompt</strong>
+<p data-i18n="dor.2.p">Reescreve a mesma instrução toda vez em vez de automatizar o processo de uma vez por todas.</p>
+</div>
+<div class="dor-card">
+<strong data-i18n="dor.3.t">Tem uma ideia mas não sabe por onde começar</strong>
+<p data-i18n="dor.3.p">Sente que dava pra transformar isso num produto ou serviço, mas trava na primeira etapa.</p>
+</div>
+<div class="dor-card">
+<strong data-i18n="dor.4.t">Paga caro pela ferramenta errada</strong>
+<p data-i18n="dor.4.p">Assina serviços que fazem menos do que o Claude já faz sozinho, de graça ou por muito menos.</p>
+</div>
+</div>
 </section>
 
 <!-- O QUE VAI CONSTRUIR -->
 <section class="section-alt" id="o-que-vai-construir">
-  <h2>O que você vai construir no curso gratuito</h2>
-  <p class="section-lead">5 trilhas, 24 aulas, sem custo nenhum.</p>
-  <div class="trilhas-grid">
-    <div class="trilha-card">
-      <strong>Trilha 1</strong>
-      <p>Fundamentos do ecossistema Claude</p>
-    </div>
-    <div class="trilha-card">
-      <strong>Trilha 2</strong>
-      <p>Claude Code do zero ao avançado</p>
-    </div>
-    <div class="trilha-card">
-      <strong>Trilha 3</strong>
-      <p>Skills, MCP e automação sem código</p>
-    </div>
-    <div class="trilha-card">
-      <strong>Trilha 4</strong>
-      <p>Engenharia de software com Claude</p>
-    </div>
-    <div class="trilha-card">
-      <strong>Trilha 5</strong>
-      <p>Do zero ao negócio real</p>
-    </div>
-  </div>
-  <div class="inline-cta">
-    <p>Já sabe o básico e quer resolver um caso específico agora? Veja a biblioteca de ebooks abaixo.</p>
-    <a href="#ebooks" class="btn btn-secondary">Ver os ebooks</a>
-  </div>
+<h2 data-i18n="trilhas.h2">O que você vai construir no curso gratuito</h2>
+<p class="section-lead" data-i18n="trilhas.lead">5 trilhas, 24 aulas, sem custo nenhum.</p>
+<div class="trilhas-grid">
+<div class="trilha-card">
+<strong data-i18n="trilhas.1.t">Trilha 1</strong>
+<p data-i18n="trilhas.1.p">Fundamentos do ecossistema Claude</p>
+</div>
+<div class="trilha-card">
+<strong data-i18n="trilhas.2.t">Trilha 2</strong>
+<p data-i18n="trilhas.2.p">Claude Code do zero ao avançado</p>
+</div>
+<div class="trilha-card">
+<strong data-i18n="trilhas.3.t">Trilha 3</strong>
+<p data-i18n="trilhas.3.p">Skills, MCP e automação sem código</p>
+</div>
+<div class="trilha-card">
+<strong data-i18n="trilhas.4.t">Trilha 4</strong>
+<p data-i18n="trilhas.4.p">Engenharia de software com Claude</p>
+</div>
+<div class="trilha-card">
+<strong data-i18n="trilhas.5.t">Trilha 5</strong>
+<p data-i18n="trilhas.5.p">Do zero ao negócio real</p>
+</div>
+</div>
+<div class="inline-cta">
+<p data-i18n="trilhas.inline">Já sabe o básico e quer resolver um caso específico agora? Veja a biblioteca de ebooks abaixo.</p>
+<a href="#ebooks" class="btn btn-secondary" data-i18n="trilhas.inlineCta">Ver os ebooks</a>
+</div>
 </section>
 
 <!-- GRADE -->
 <section>
-  <h2>O que está incluso</h2>
-  <ul class="grade-list">
-    <li class="grade-item"><span>1</span> Curso completo com 24 aulas — de graça, sem pegadinha</li>
-    <li class="grade-item"><span>2</span> Acesso à área de membros com progresso salvo</li>
-    <li class="grade-item"><span>3</span> Biblioteca de 13 ebooks práticos, vendidos à parte, a partir de R$ 5</li>
-    <li class="grade-item"><span>4</span> Atualizações do conteúdo incluídas</li>
-  </ul>
+<h2 data-i18n="grade.h2">O que está incluso</h2>
+<ul class="grade-list">
+<li class="grade-item"><span>1</span> <span data-i18n="grade.1">Curso completo com 24 aulas — de graça, sem pegadinha</span></li>
+<li class="grade-item"><span>2</span> <span data-i18n="grade.2">Acesso à área de membros com progresso salvo</span></li>
+<li class="grade-item"><span>3</span> <span data-i18n="grade.3">Biblioteca de 13 ebooks práticos, vendidos à parte, a partir de R$ 5</span></li>
+<li class="grade-item"><span>4</span> <span data-i18n="grade.4">Atualizações do conteúdo incluídas</span></li>
+</ul>
 </section>
 
 <!-- BÔNUS -->
 <section class="section-alt">
-  <h2>Bônus de quem começa hoje</h2>
-  <div class="bonus-grid">
-    <div class="bonus-card">
-      <strong>Bônus 1</strong>
-      <p>Portfólio profissional em 1 dia</p>
-    </div>
-    <div class="bonus-card">
-      <strong>Bônus 2</strong>
-      <p>Ebook Integrações do Zero por R$ 5</p>
-    </div>
-    <div class="bonus-card">
-      <strong>Bônus 3</strong>
-      <p>Comunidade de alunos</p>
-    </div>
-  </div>
+<h2 data-i18n="bonus.h2">Bônus de quem começa hoje</h2>
+<div class="bonus-grid">
+<div class="bonus-card">
+<strong data-i18n="bonus.1.t">Bônus 1</strong>
+<p data-i18n="bonus.1.p">Portfólio profissional em 1 dia</p>
+</div>
+<div class="bonus-card">
+<strong data-i18n="bonus.2.t">Bônus 2</strong>
+<p data-i18n="bonus.2.p">Ebook Integrações do Zero por R$ 5</p>
+</div>
+<div class="bonus-card">
+<strong data-i18n="bonus.3.t">Bônus 3</strong>
+<p data-i18n="bonus.3.p">Comunidade de alunos</p>
+</div>
+</div>
 </section>
 
-<!-- BIBLIOTECA DE EBOOKS -->
+<!-- BIBLIOTECA DE EBOOKS (PT) -->
 <section class="section-alt" id="ebooks">
-  <h2>Biblioteca de ebooks práticos</h2>
-  <p class="section-lead">13 guias diretos ao ponto, cada um resolvendo um caso real de uso do Claude. A partir de R$ 5,00, sem assinatura.</p>
+<div id="ebooks-pt">
+<h2 data-i18n="ebooks.h2">Biblioteca de ebooks práticos</h2>
+<p class="section-lead" data-i18n="ebooks.lead">13 guias diretos ao ponto, cada um resolvendo um caso real de uso do Claude. A partir de R$ 5,00, sem assinatura.</p>
 
-  <article class="bundle-card">
-    <div class="bundle-info">
-      <span class="badge-bundle">Coleção completa</span>
-      <h3>Os 13 ebooks — Coleção de Ebooks: Negócios com IA</h3>
-      <p>Leve a biblioteca inteira com um bom desconto em vez de comprar ebook por ebook.</p>
-    </div>
-    <div class="bundle-price-box">
-      <span class="bundle-price">R$ 100,00</span>
-      <a href="https://pay.kiwify.com.br/i6cp5Kh" target="_blank" rel="noopener" class="btn btn-primary">Quero a coleção completa</a>
-    </div>
-  </article>
+<article class="bundle-card">
+<div class="bundle-info">
+<span class="badge-bundle" data-i18n="ebooks.bundle.badge">Coleção completa</span>
+<h3 data-i18n="ebooks.bundle.h3">Os 13 ebooks — Coleção de Ebooks: Negócios com IA</h3>
+<p data-i18n="ebooks.bundle.p">Leve a biblioteca inteira com um bom desconto em vez de comprar ebook por ebook.</p>
+</div>
+<div class="bundle-price-box">
+<span class="bundle-price">R$ 100,00</span>
+<a href="https://pay.kiwify.com.br/i6cp5Kh" target="_blank" rel="noopener" class="btn btn-primary" data-i18n="ebooks.bundle.cta">Quero a coleção completa</a>
+</div>
+</article>
 
-  <div class="ebooks-grid">
-            <article class="ebook-card">
-              <div class="ebook-card-top accent-verde"><span class="ebook-num">01</span></div>
-              <div class="ebook-card-body">
-                <h3>Crie Seu Site Completo com Banco de Dados</h3>
-                <p>Do zero ao ar: site profissional com banco de dados, sem precisar programar sozinho.</p>
-                <div class="ebook-card-footer">
-                  <span class="ebook-price">R$ 25,00</span>
-                  <a href="https://pay.kiwify.com.br/2ZNnsZm" target="_blank" rel="noopener" class="btn btn-ebook">Quero este ebook</a>
-                </div>
-              </div>
-            </article>
-            <article class="ebook-card">
-              <div class="ebook-card-top accent-marrom"><span class="ebook-num">02</span></div>
-              <div class="ebook-card-body">
-                <h3>Crie um App Grátis do Zero até Publicar</h3>
-                <p>Construa e publique seu primeiro aplicativo sem gastar nada em ferramentas.</p>
-                <div class="ebook-card-footer">
-                  <span class="ebook-price">R$ 22,00</span>
-                  <a href="https://pay.kiwify.com.br/um4b8yP" target="_blank" rel="noopener" class="btn btn-ebook">Quero este ebook</a>
-                </div>
-              </div>
-            </article>
-            <article class="ebook-card">
-              <div class="ebook-card-top accent-laranja"><span class="ebook-num">03</span></div>
-              <div class="ebook-card-body">
-                <h3>Automação de Atendimento no WhatsApp</h3>
-                <p>Monte um atendente automático que responde clientes no WhatsApp por você.</p>
-                <div class="ebook-card-footer">
-                  <span class="ebook-price">R$ 25,00</span>
-                  <a href="https://pay.kiwify.com.br/Upxk2sr" target="_blank" rel="noopener" class="btn btn-ebook">Quero este ebook</a>
-                </div>
-              </div>
-            </article>
-            <article class="ebook-card">
-              <div class="ebook-card-top accent-verde"><span class="ebook-num">04</span></div>
-              <div class="ebook-card-body">
-                <h3>Copywriting e Funis de Venda com Claude</h3>
-                <p>Escreva páginas, anúncios e e-mails que vendem, com a ajuda do Claude.</p>
-                <div class="ebook-card-footer">
-                  <span class="ebook-price">R$ 20,00</span>
-                  <a href="https://pay.kiwify.com.br/Ny3E1F2" target="_blank" rel="noopener" class="btn btn-ebook">Quero este ebook</a>
-                </div>
-              </div>
-            </article>
-            <article class="ebook-card">
-              <div class="ebook-card-top accent-marrom"><span class="ebook-num">05</span></div>
-              <div class="ebook-card-body">
-                <h3>Cowork: Seu Assistente de Escritório</h3>
-                <p>Delegue tarefas inteiras de escritório pro Claude, sem escrever código.</p>
-                <div class="ebook-card-footer">
-                  <span class="ebook-price">R$ 18,00</span>
-                  <a href="https://pay.kiwify.com.br/OEnP5Uv" target="_blank" rel="noopener" class="btn btn-ebook">Quero este ebook</a>
-                </div>
-              </div>
-            </article>
-            <article class="ebook-card">
-              <div class="ebook-card-top accent-laranja"><span class="ebook-num">06</span></div>
-              <div class="ebook-card-body">
-                <h3>Claude para Criadores de Conteúdo</h3>
-                <p>Roteiros, legendas e ideias de vídeo no piloto automático.</p>
-                <div class="ebook-card-footer">
-                  <span class="ebook-price">R$ 18,00</span>
-                  <a href="https://pay.kiwify.com.br/J3E0mms" target="_blank" rel="noopener" class="btn btn-ebook">Quero este ebook</a>
-                </div>
-              </div>
-            </article>
-            <article class="ebook-card">
-              <div class="ebook-card-top accent-verde"><span class="ebook-num">07</span></div>
-              <div class="ebook-card-body">
-                <h3>Integrações do Zero</h3>
-                <p>Conecte o Claude a tudo que você já usa: e-mail, planilhas, apps e mais.</p>
-                <div class="ebook-card-footer">
-                  <span class="ebook-price">R$ 5,00</span>
-                  <a href="https://pay.kiwify.com.br/azzvtoq" target="_blank" rel="noopener" class="btn btn-ebook">Quero este ebook</a>
-                </div>
-              </div>
-            </article>
-            <article class="ebook-card">
-              <div class="ebook-card-top accent-marrom"><span class="ebook-num">08</span></div>
-              <div class="ebook-card-body">
-                <h3>Empacote Seu Conhecimento em Skills</h3>
-                <p>Transforme o que você sabe numa Skill do Claude pronta pra vender.</p>
-                <div class="ebook-card-footer">
-                  <span class="ebook-price">R$ 20,00</span>
-                  <a href="https://pay.kiwify.com.br/XlxJpCs" target="_blank" rel="noopener" class="btn btn-ebook">Quero este ebook</a>
-                </div>
-              </div>
-            </article>
-            <article class="ebook-card">
-              <div class="ebook-card-top accent-laranja"><span class="ebook-num">09</span></div>
-              <div class="ebook-card-body">
-                <h3>Consultoria Relâmpago de IA</h3>
-                <p>Ofereça consultorias rápidas de IA pra pequenos negócios ainda essa semana.</p>
-                <div class="ebook-card-footer">
-                  <span class="ebook-price">R$ 18,00</span>
-                  <a href="https://pay.kiwify.com.br/l8pSgDz" target="_blank" rel="noopener" class="btn btn-ebook">Quero este ebook</a>
-                </div>
-              </div>
-            </article>
-            <article class="ebook-card">
-              <div class="ebook-card-top accent-verde"><span class="ebook-num">10</span></div>
-              <div class="ebook-card-body">
-                <h3>Automatize Planilhas e Relatórios</h3>
-                <p>Relatórios financeiros prontos em minutos, não em horas.</p>
-                <div class="ebook-card-footer">
-                  <span class="ebook-price">R$ 20,00</span>
-                  <a href="https://pay.kiwify.com.br/i1pyfA1" target="_blank" rel="noopener" class="btn btn-ebook">Quero este ebook</a>
-                </div>
-              </div>
-            </article>
-            <article class="ebook-card">
-              <div class="ebook-card-top accent-marrom"><span class="ebook-num">11</span></div>
-              <div class="ebook-card-body">
-                <h3>Treinamento Corporativo Vendável</h3>
-                <p>Empacote sua experiência num treinamento que empresas pagam para ter.</p>
-                <div class="ebook-card-footer">
-                  <span class="ebook-price">R$ 25,00</span>
-                  <a href="https://pay.kiwify.com.br/5nLaBTU" target="_blank" rel="noopener" class="btn btn-ebook">Quero este ebook</a>
-                </div>
-              </div>
-            </article>
-            <article class="ebook-card">
-              <div class="ebook-card-top accent-laranja"><span class="ebook-num">12</span></div>
-              <div class="ebook-card-body">
-                <h3>Pesquisa e Resumo como Serviço</h3>
-                <p>Venda pesquisas e resumos profissionais feitos com Claude em minutos.</p>
-                <div class="ebook-card-footer">
-                  <span class="ebook-price">R$ 17,00</span>
-                  <a href="https://pay.kiwify.com.br/ulq37zL" target="_blank" rel="noopener" class="btn btn-ebook">Quero este ebook</a>
-                </div>
-              </div>
-            </article>
-            <article class="ebook-card">
-              <div class="ebook-card-top accent-verde"><span class="ebook-num">13</span></div>
-              <div class="ebook-card-body">
-                <h3>Crie e Venda Agentes Prontos via MCP</h3>
-                <p>Construa conectores MCP e venda acesso a um produto que se entrega sozinho.</p>
-                <div class="ebook-card-footer">
-                  <span class="ebook-price">R$ 20,00</span>
-                  <a href="https://pay.kiwify.com.br/Xl4vDCR" target="_blank" rel="noopener" class="btn btn-ebook">Quero este ebook</a>
-                </div>
-              </div>
-            </article>
+<div class="ebooks-grid">
+<article class="ebook-card">
+<div class="ebook-card-top accent-verde"><span class="ebook-num">01</span></div>
+<div class="ebook-card-body">
+<h3 data-i18n="ebooks.1.h3">Crie Seu Site Completo com Banco de Dados</h3>
+<p data-i18n="ebooks.1.p">Do zero ao ar: site profissional com banco de dados, sem precisar programar sozinho.</p>
+<div class="ebook-card-footer">
+<span class="ebook-price">R$ 25,00</span>
+<a href="https://pay.kiwify.com.br/2ZNnsZm" target="_blank" rel="noopener" class="btn btn-ebook" data-i18n="ebooks.cta">Quero este ebook</a>
+</div>
+</div>
+</article>
+<article class="ebook-card">
+<div class="ebook-card-top accent-marrom"><span class="ebook-num">02</span></div>
+<div class="ebook-card-body">
+<h3 data-i18n="ebooks.2.h3">Crie um App Grátis do Zero até Publicar</h3>
+<p data-i18n="ebooks.2.p">Construa e publique seu primeiro aplicativo sem gastar nada em ferramentas.</p>
+<div class="ebook-card-footer">
+<span class="ebook-price">R$ 22,00</span>
+<a href="https://pay.kiwify.com.br/um4b8yP" target="_blank" rel="noopener" class="btn btn-ebook" data-i18n="ebooks.cta">Quero este ebook</a>
+</div>
+</div>
+</article>
+<article class="ebook-card">
+<div class="ebook-card-top accent-laranja"><span class="ebook-num">03</span></div>
+<div class="ebook-card-body">
+<h3 data-i18n="ebooks.3.h3">Automação de Atendimento no WhatsApp</h3>
+<p data-i18n="ebooks.3.p">Monte um atendente automático que responde clientes no WhatsApp por você.</p>
+<div class="ebook-card-footer">
+<span class="ebook-price">R$ 25,00</span>
+<a href="https://pay.kiwify.com.br/Upxk2sr" target="_blank" rel="noopener" class="btn btn-ebook" data-i18n="ebooks.cta">Quero este ebook</a>
+</div>
+</div>
+</article>
+<article class="ebook-card">
+<div class="ebook-card-top accent-verde"><span class="ebook-num">04</span></div>
+<div class="ebook-card-body">
+<h3 data-i18n="ebooks.4.h3">Copywriting e Funis de Venda com Claude</h3>
+<p data-i18n="ebooks.4.p">Escreva páginas, anúncios e e-mails que vendem, com a ajuda do Claude.</p>
+<div class="ebook-card-footer">
+<span class="ebook-price">R$ 20,00</span>
+<a href="https://pay.kiwify.com.br/Ny3E1F2" target="_blank" rel="noopener" class="btn btn-ebook" data-i18n="ebooks.cta">Quero este ebook</a>
+</div>
+</div>
+</article>
+<article class="ebook-card">
+<div class="ebook-card-top accent-marrom"><span class="ebook-num">05</span></div>
+<div class="ebook-card-body">
+<h3 data-i18n="ebooks.5.h3">Cowork: Seu Assistente de Escritório</h3>
+<p data-i18n="ebooks.5.p">Delegue tarefas inteiras de escritório pro Claude, sem escrever código.</p>
+<div class="ebook-card-footer">
+<span class="ebook-price">R$ 18,00</span>
+<a href="https://pay.kiwify.com.br/OEnP5Uv" target="_blank" rel="noopener" class="btn btn-ebook" data-i18n="ebooks.cta">Quero este ebook</a>
+</div>
+</div>
+</article>
+<article class="ebook-card">
+<div class="ebook-card-top accent-laranja"><span class="ebook-num">06</span></div>
+<div class="ebook-card-body">
+<h3 data-i18n="ebooks.6.h3">Claude para Criadores de Conteúdo</h3>
+<p data-i18n="ebooks.6.p">Roteiros, legendas e ideias de vídeo no piloto automático.</p>
+<div class="ebook-card-footer">
+<span class="ebook-price">R$ 18,00</span>
+<a href="https://pay.kiwify.com.br/J3E0mms" target="_blank" rel="noopener" class="btn btn-ebook" data-i18n="ebooks.cta">Quero este ebook</a>
+</div>
+</div>
+</article>
+<article class="ebook-card">
+<div class="ebook-card-top accent-verde"><span class="ebook-num">07</span></div>
+<div class="ebook-card-body">
+<h3 data-i18n="ebooks.7.h3">Integrações do Zero</h3>
+<p data-i18n="ebooks.7.p">Conecte o Claude a tudo que você já usa: e-mail, planilhas, apps e mais.</p>
+<div class="ebook-card-footer">
+<span class="ebook-price">R$ 5,00</span>
+<a href="https://pay.kiwify.com.br/azzvtoq" target="_blank" rel="noopener" class="btn btn-ebook" data-i18n="ebooks.cta">Quero este ebook</a>
+</div>
+</div>
+</article>
+<article class="ebook-card">
+<div class="ebook-card-top accent-marrom"><span class="ebook-num">08</span></div>
+<div class="ebook-card-body">
+<h3 data-i18n="ebooks.8.h3">Empacote Seu Conhecimento em Skills</h3>
+<p data-i18n="ebooks.8.p">Transforme o que você sabe numa Skill do Claude pronta pra vender.</p>
+<div class="ebook-card-footer">
+<span class="ebook-price">R$ 20,00</span>
+<a href="https://pay.kiwify.com.br/XlxJpCs" target="_blank" rel="noopener" class="btn btn-ebook" data-i18n="ebooks.cta">Quero este ebook</a>
+</div>
+</div>
+</article>
+<article class="ebook-card">
+<div class="ebook-card-top accent-laranja"><span class="ebook-num">09</span></div>
+<div class="ebook-card-body">
+<h3 data-i18n="ebooks.9.h3">Consultoria Relâmpago de IA</h3>
+<p data-i18n="ebooks.9.p">Ofereça consultorias rápidas de IA pra pequenos negócios ainda essa semana.</p>
+<div class="ebook-card-footer">
+<span class="ebook-price">R$ 18,00</span>
+<a href="https://pay.kiwify.com.br/l8pSgDz" target="_blank" rel="noopener" class="btn btn-ebook" data-i18n="ebooks.cta">Quero este ebook</a>
+</div>
+</div>
+</article>
+<article class="ebook-card">
+<div class="ebook-card-top accent-verde"><span class="ebook-num">10</span></div>
+<div class="ebook-card-body">
+<h3 data-i18n="ebooks.10.h3">Automatize Planilhas e Relatórios</h3>
+<p data-i18n="ebooks.10.p">Relatórios financeiros prontos em minutos, não em horas.</p>
+<div class="ebook-card-footer">
+<span class="ebook-price">R$ 20,00</span>
+<a href="https://pay.kiwify.com.br/i1pyfA1" target="_blank" rel="noopener" class="btn btn-ebook" data-i18n="ebooks.cta">Quero este ebook</a>
+</div>
+</div>
+</article>
+<article class="ebook-card">
+<div class="ebook-card-top accent-marrom"><span class="ebook-num">11</span></div>
+<div class="ebook-card-body">
+<h3 data-i18n="ebooks.11.h3">Treinamento Corporativo Vendável</h3>
+<p data-i18n="ebooks.11.p">Empacote sua experiência num treinamento que empresas pagam para ter.</p>
+<div class="ebook-card-footer">
+<span class="ebook-price">R$ 25,00</span>
+<a href="https://pay.kiwify.com.br/5nLaBTU" target="_blank" rel="noopener" class="btn btn-ebook" data-i18n="ebooks.cta">Quero este ebook</a>
+</div>
+</div>
+</article>
+<article class="ebook-card">
+<div class="ebook-card-top accent-laranja"><span class="ebook-num">12</span></div>
+<div class="ebook-card-body">
+<h3 data-i18n="ebooks.12.h3">Pesquisa e Resumo como Serviço</h3>
+<p data-i18n="ebooks.12.p">Venda pesquisas e resumos profissionais feitos com Claude em minutos.</p>
+<div class="ebook-card-footer">
+<span class="ebook-price">R$ 17,00</span>
+<a href="https://pay.kiwify.com.br/ulq37zL" target="_blank" rel="noopener" class="btn btn-ebook" data-i18n="ebooks.cta">Quero este ebook</a>
+</div>
+</div>
+</article>
+<article class="ebook-card">
+<div class="ebook-card-top accent-verde"><span class="ebook-num">13</span></div>
+<div class="ebook-card-body">
+<h3 data-i18n="ebooks.13.h3">Crie e Venda Agentes Prontos via MCP</h3>
+<p data-i18n="ebooks.13.p">Construa conectores MCP e venda acesso a um produto que se entrega sozinho.</p>
+<div class="ebook-card-footer">
+<span class="ebook-price">R$ 20,00</span>
+<a href="https://pay.kiwify.com.br/Xl4vDCR" target="_blank" rel="noopener" class="btn btn-ebook" data-i18n="ebooks.cta">Quero este ebook</a>
+</div>
+</div>
+</article>
 
-  </div>
+</div>
+</div>
+
+<!-- BIBLIOTECA DE EBOOKS (EN — coming soon) -->
+<div id="ebooks-en" class="ebooks-en-soon" style="display:none;">
+<h2>Practical ebook library</h2>
+<h3>English ebooks are coming soon</h3>
+<p>The 13-ebook library is currently only available in Portuguese. We're working on the English versions — in the meantime, the full course below is already available in English.</p>
+<a href="#o-que-vai-construir" class="btn btn-primary">Back to the free course</a>
+</div>
 </section>
 
 <!-- PROVA/GARANTIA -->
 <section>
-  <div class="garantia-box">
-    <strong>Garantia de 7 dias em qualquer ebook</strong>
-    <p>Se algum dos ebooks não te ajudar com o que precisa, devolvemos seu dinheiro em até 7 dias, sem burocracia. O curso é gratuito e continua seu pra sempre.</p>
-  </div>
+<div class="garantia-box">
+<strong data-i18n="garantia.t">Garantia de 7 dias em qualquer ebook</strong>
+<p data-i18n="garantia.p">Se algum dos ebooks não te ajudar com o que precisa, devolvemos seu dinheiro em até 7 dias, sem burocracia. O curso é gratuito e continua seu pra sempre.</p>
+</div>
 </section>
 
 <!-- FAQ -->
 <section>
-  <h2>Perguntas frequentes</h2>
-  <div class="faq-list">
-    <details class="faq-item">
-      <summary>O curso é mesmo gratuito?</summary>
-      <p>Sim. As 24 aulas do curso completo são 100% gratuitas — basta criar sua conta na área de membros. A biblioteca de 13 ebooks práticos é vendida separadamente, a partir de R$ 5,00, pra quem quiser um atalho em um problema específico.</p>
-    </details>
-    <details class="faq-item">
-      <summary>Preciso saber programar?</summary>
-      <p>Não. O curso começa do zero, e boa parte do conteúdo é sobre usar o Claude sem escrever código.</p>
-    </details>
-    <details class="faq-item">
-      <summary>Os ebooks têm garantia?</summary>
-      <p>Sim, 7 dias de garantia incondicional em qualquer ebook ou na coleção completa.</p>
-    </details>
-    <details class="faq-item">
-      <summary>Preciso comprar os ebooks pra fazer o curso?</summary>
-      <p>Não. O curso é independente e gratuito. Os ebooks são um atalho opcional pra quem já sabe o que precisa resolver.</p>
-    </details>
-    <details class="faq-item">
-      <summary>Quanto tempo tenho de acesso?</summary>
-      <p>Acesso vitalício, tanto ao curso gratuito quanto a qualquer ebook que você comprar.</p>
-    </details>
-  </div>
+<h2 data-i18n="faq.h2">Perguntas frequentes</h2>
+<div class="faq-list">
+<details class="faq-item">
+<summary data-i18n="faq.1.q">O curso é mesmo gratuito?</summary>
+<p data-i18n="faq.1.a">Sim. As 24 aulas do curso completo são 100% gratuitas — basta criar sua conta na área de membros. A biblioteca de 13 ebooks práticos é vendida separadamente, a partir de R$ 5,00, pra quem quiser um atalho em um problema específico.</p>
+</details>
+<details class="faq-item">
+<summary data-i18n="faq.2.q">Preciso saber programar?</summary>
+<p data-i18n="faq.2.a">Não. O curso começa do zero, e boa parte do conteúdo é sobre usar o Claude sem escrever código.</p>
+</details>
+<details class="faq-item">
+<summary data-i18n="faq.3.q">Os ebooks têm garantia?</summary>
+<p data-i18n="faq.3.a">Sim, 7 dias de garantia incondicional em qualquer ebook ou na coleção completa.</p>
+</details>
+<details class="faq-item">
+<summary data-i18n="faq.4.q">Preciso comprar os ebooks pra fazer o curso?</summary>
+<p data-i18n="faq.4.a">Não. O curso é independente e gratuito. Os ebooks são um atalho opcional pra quem já sabe o que precisa resolver.</p>
+</details>
+<details class="faq-item">
+<summary data-i18n="faq.5.q">Quanto tempo tenho de acesso?</summary>
+<p data-i18n="faq.5.a">Acesso vitalício, tanto ao curso gratuito quanto a qualquer ebook que você comprar.</p>
+</details>
+</div>
 </section>
 
 <!-- CTA FINAL -->
 <section class="section-alt" id="preco">
-  <div class="pricing-card">
-    <h2>Comece agora, é grátis</h2>
-    <p class="price-note">Curso completo, sem custo, sem pegadinha.</p>
-    <ul>
-      <li>✔ 24 aulas em 5 trilhas completas</li>
-      <li>✔ Área de membros com progresso salvo</li>
-      <li>✔ Atualizações de conteúdo incluídas</li>
-      <li>✔ Comunidade de alunos</li>
-    </ul>
-    <a href="app/login.html" class="btn btn-primary btn-block">Quero começar agora, de graça</a>
-    <a href="#ebooks" class="btn btn-secondary btn-block">Ou ver os ebooks práticos</a>
-  </div>
+<div class="pricing-card">
+<h2 data-i18n="final.h2">Comece agora, é grátis</h2>
+<p class="price-note" data-i18n="final.note">Curso completo, sem custo, sem pegadinha.</p>
+<ul>
+<li data-i18n="final.1">✔ 24 aulas em 5 trilhas completas</li>
+<li data-i18n="final.2">✔ Área de membros com progresso salvo</li>
+<li data-i18n="final.3">✔ Atualizações de conteúdo incluídas</li>
+<li data-i18n="final.4">✔ Comunidade de alunos</li>
+</ul>
+<a href="app/login.html" class="btn btn-primary btn-block" data-i18n="final.cta1">Quero começar agora, de graça</a>
+<a href="#ebooks" class="btn btn-secondary btn-block" data-i18n="final.cta2">Ou ver os ebooks práticos</a>
+</div>
 </section>
 
 <footer>
-  <p>Use o Claude de Verdade — <span id="ano"></span></p>
-  <p><a href="#ebooks">Biblioteca de ebooks</a> · <a href="app/login.html">Área de membros</a></p>
+<p data-i18n="footer.1"><span data-i18n-skip>Use o Claude de Verdade — </span><span id="ano"></span></p>
+<p><a href="#ebooks" data-i18n="footer.link1">Biblioteca de ebooks</a> · <a href="app/login.html" data-i18n="footer.link2">Área de membros</a></p>
 </footer>
 
 <script>document.getElementById('ano').textContent = new Date().getFullYear();</script>
+
+<script>
+(function() {
+  const dict = {
+    en: {
+      "nav.ebooks": "See the 13 ebooks",
+      "nav.start": "Start for free",
+      "hero.badge": "100% free",
+      "hero.title": "Learn to really use Claude — from your first prompt to a real business",
+      "hero.subtitle": "A full course with 5 tracks and 24 lessons, free forever. Want a shortcut for a specific problem? The 13-ebook library solves that starting at $5.",
+      "hero.cta1": "Start now, it's free",
+      "hero.cta2": "See the 13 practical ebooks",
+      "mini.text": "<strong>Need a shortcut for a specific problem?</strong> The ebook library solves practical cases — WhatsApp automation, spreadsheets, copywriting and more — starting at <strong>$5</strong>.",
+      "mini.cta": "Explore the library",
+      "dor.h2": "Do any of these sound like you?",
+      "dor.lead": "Most people use about 5% of what Claude can actually do.",
+      "dor.1.t": "Never used Claude Code, Cowork or Skills",
+      "dor.1.p": "You know they exist, but never got hands-on to see what really changes day to day.",
+      "dor.2.t": "Keep rewriting the same prompt",
+      "dor.2.p": "You retype the same instruction every time instead of automating the process once and for all.",
+      "dor.3.t": "Have an idea but don't know where to start",
+      "dor.3.p": "You feel it could become a product or service, but get stuck on the first step.",
+      "dor.4.t": "Paying a lot for the wrong tool",
+      "dor.4.p": "You're subscribed to services that do less than Claude already does alone, for free or much less.",
+      "trilhas.h2": "What you'll build in the free course",
+      "trilhas.lead": "5 tracks, 24 lessons, at no cost.",
+      "trilhas.1.t": "Track 1",
+      "trilhas.1.p": "Fundamentals of the Claude ecosystem",
+      "trilhas.2.t": "Track 2",
+      "trilhas.2.p": "Claude Code from zero to advanced",
+      "trilhas.3.t": "Track 3",
+      "trilhas.3.p": "Skills, MCP and no-code automation",
+      "trilhas.4.t": "Track 4",
+      "trilhas.4.p": "Software engineering with Claude",
+      "trilhas.5.t": "Track 5",
+      "trilhas.5.p": "From zero to a real business",
+      "trilhas.inline": "Already know the basics and want to solve a specific case now? Check the ebook library below.",
+      "trilhas.inlineCta": "See the ebooks",
+      "grade.h2": "What's included",
+      "grade.1": "Full course with 24 lessons — free, no catch",
+      "grade.2": "Access to the members area with saved progress",
+      "grade.3": "Library of 13 practical ebooks, sold separately, starting at $5",
+      "grade.4": "Content updates included",
+      "bonus.h2": "Bonuses for who starts today",
+      "bonus.1.t": "Bonus 1",
+      "bonus.1.p": "Professional portfolio in 1 day",
+      "bonus.2.t": "Bonus 2",
+      "bonus.2.p": "\"Integrations from Scratch\" ebook for $5",
+      "bonus.3.t": "Bonus 3",
+      "bonus.3.p": "Student community",
+      "ebooks.h2": "Practical ebook library",
+      "ebooks.lead": "13 straight-to-the-point guides, each solving a real Claude use case. Starting at $5, no subscription.",
+      "garantia.t": "7-day guarantee on any ebook",
+      "garantia.p": "If any ebook doesn't help you with what you need, we refund your money within 7 days, no questions asked. The course is free and stays yours forever.",
+      "faq.h2": "Frequently asked questions",
+      "faq.1.q": "Is the course really free?",
+      "faq.1.a": "Yes. All 24 lessons of the full course are 100% free — just create your account in the members area. The 13-ebook library is sold separately, starting at $5, for those who want a shortcut on a specific problem.",
+      "faq.2.q": "Do I need to know how to code?",
+      "faq.2.a": "No. The course starts from zero, and a big part of the content is about using Claude without writing code.",
+      "faq.3.q": "Do the ebooks have a guarantee?",
+      "faq.3.a": "Yes, a 7-day unconditional guarantee on any ebook or the full collection.",
+      "faq.4.q": "Do I need to buy the ebooks to take the course?",
+      "faq.4.a": "No. The course is independent and free. The ebooks are an optional shortcut for those who already know what they need to solve.",
+      "faq.5.q": "How long do I have access for?",
+      "faq.5.a": "Lifetime access, both to the free course and to any ebook you purchase.",
+      "final.h2": "Start now, it's free",
+      "final.note": "Full course, no cost, no catch.",
+      "final.1": "✔ 24 lessons across 5 complete tracks",
+      "final.2": "✔ Members area with saved progress",
+      "final.3": "✔ Content updates included",
+      "final.4": "✔ Student community",
+      "final.cta1": "I want to start now, for free",
+      "final.cta2": "Or see the practical ebooks",
+      "footer.1": "Use o Claude de Verdade — ",
+      "footer.link1": "Ebook library",
+      "footer.link2": "Members area"
+    }
+  };
+
+  const STORAGE_KEY = 'ucdv_lang';
+  let current = localStorage.getItem(STORAGE_KEY) || 'pt';
+
+  function applyLang(lang) {
+    const isEn = lang === 'en';
+    document.getElementById('html-root').lang = isEn ? 'en' : 'pt-br';
+    document.getElementById('btn-lang').textContent = isEn ? 'PT / EN' : 'EN / PT';
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (isEn && dict.en[key]) {
+        if (!el.dataset.ptOriginal) el.dataset.ptOriginal = el.textContent;
+        el.textContent = dict.en[key];
+      } else if (el.dataset.ptOriginal) {
+        el.textContent = el.dataset.ptOriginal;
+      }
+    });
+
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const key = el.getAttribute('data-i18n-html');
+      if (isEn && dict.en[key]) {
+        if (!el.dataset.ptOriginalHtml) el.dataset.ptOriginalHtml = el.innerHTML;
+        el.innerHTML = dict.en[key];
+      } else if (el.dataset.ptOriginalHtml) {
+        el.innerHTML = el.dataset.ptOriginalHtml;
+      }
+    });
+
+    document.getElementById('ebooks-pt').style.display = isEn ? 'none' : '';
+    document.getElementById('ebooks-en').style.display = isEn ? '' : 'none';
+
+    localStorage.setItem(STORAGE_KEY, lang);
+    current = lang;
+  }
+
+  document.getElementById('btn-lang').addEventListener('click', () => {
+    applyLang(current === 'pt' ? 'en' : 'pt');
+  });
+
+  applyLang(current);
+})();
+</script>
 </body>
 </html>
