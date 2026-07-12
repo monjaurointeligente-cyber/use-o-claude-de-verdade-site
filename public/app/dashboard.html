@@ -8,6 +8,17 @@
 <style>
 .aula-row.locked { opacity: 0.55; cursor: not-allowed; pointer-events: none; }
 .aula-row .lock-icon { margin-left: 8px; }
+
+.ebook-marquee { background: var(--marrom, #2B2118); overflow: hidden; white-space: nowrap; }
+.ebook-marquee-track { display: inline-flex; width: max-content; animation: ebook-marquee-scroll 45s linear infinite; }
+.ebook-marquee-item { display: inline-flex; align-items: center; gap: 8px; color: var(--branco, #fff); text-decoration: none; font-weight: 600; font-size: 0.85rem; padding: 11px 26px; border-right: 1px solid rgba(255,255,255,0.18); white-space: nowrap; }
+.ebook-marquee-item:hover { background: rgba(255,255,255,0.08); }
+.ebook-marquee-item .preco { color: #F0B99A; font-weight: 700; }
+@keyframes ebook-marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  .ebook-marquee { overflow-x: auto; }
+  .ebook-marquee-track { animation: none; }
+}
 </style>
 </head>
 <body class="app-shell">
@@ -17,89 +28,19 @@
 <a href="#" class="logout" id="btn-logout">Sair</a>
 </nav>
 
-<main class="app-main" id="main-content">
-<p>Carregando...</p>
-</main>
-
-<script type="module">
-import { supabase, requireSession, logout } from "./supabase-client.js";
-
-document.getElementById('btn-logout').onclick = (e) => { e.preventDefault(); logout(); };
-
-const main = document.getElementById('main-content');
-
-async function init() {
-  const session = await requireSession();
-  if (!session) return;
-
-  const { data: acesso } = await supabase
-    .from('acessos')
-    .select('status')
-    .eq('user_id', session.user.id)
-    .maybeSingle();
-
-  if (!acesso || acesso.status !== 'ativo') {
-    main.innerHTML = `
-      <div class="auth-card" style="margin-top:40px;">
-        <h1>Só um instante</h1>
-        <p style="text-align:center;color:var(--cinza);">
-          Estamos liberando seu acesso ao curso gratuito (${session.user.email}).
-          Isso costuma ser instantâneo — recarregue a página em alguns segundos.
-          Se continuar assim por mais de alguns minutos, fale com o suporte.
-        </p>
-      </div>`;
-    return;
-  }
-
-  const [{ data: trilhas }, { data: aulas }, { data: progresso }] = await Promise.all([
-    supabase.from('trilhas').select('*').order('num'),
-    supabase.from('aulas').select('num, trilha_num, titulo').order('num'),
-    supabase.from('progresso').select('aula_num').eq('user_id', session.user.id),
-  ]);
-
-  const concluidas = new Set((progresso || []).map(p => p.aula_num));
-  const totalAulas = (aulas || []).length;
-  const totalConcluidas = concluidas.size;
-
-  let proximaLiberada = 1;
-  for (let n = 1; n <= totalAulas; n++) {
-    if (concluidas.has(n)) proximaLiberada = n + 1; else break;
-  }
-
-  let html = `
-    <div style="margin-bottom:28px;">
-      <h1 style="margin-bottom:4px;">Suas aulas</h1>
-      <p style="color:var(--cinza);">${totalConcluidas} de ${totalAulas} aulas concluídas</p>
-    </div>`;
-
-  (trilhas || []).forEach(trilha => {
-    const aulasDaTrilha = (aulas || []).filter(a => a.trilha_num === trilha.num);
-    if (aulasDaTrilha.length === 0) return;
-    html += `<div class="trilha-block"><h2>Trilha ${trilha.num} — ${trilha.nome}</h2>`;
-    aulasDaTrilha.forEach(aula => {
-      const done = concluidas.has(aula.num);
-      const liberada = aula.num <= proximaLiberada;
-      if (liberada) {
-        html += `
-          <a class="aula-row" href="aula.html?num=${aula.num}">
-            <span><span class="aula-num">Aula ${aula.num}</span><span class="aula-title">${aula.titulo}</span></span>
-            <span class="check">${done ? '✓ concluída' : ''}</span>
-          </a>`;
-      } else {
-        html += `
-          <span class="aula-row locked" title="Termine as aulas anteriores (com o quiz) pra desbloquear">
-            <span><span class="aula-num">Aula ${aula.num}</span><span class="aula-title">${aula.titulo}</span></span>
-            <span class="check lock-icon">🔒</span>
-          </span>`;
-      }
-    });
-    html += `</div>`;
-  });
-
-  main.innerHTML = html;
-}
-
-init();
-</script>
-</body>
-</html>
+<div class="ebook-marquee" aria-label="Biblioteca de ebooks práticos">
+<div class="ebook-marquee-track">
+<a href="https://pay.kiwify.com.br/i6cp5Kh" target="_blank" rel="noopener" class="ebook-marquee-item">📚 Coleção completa — 13 ebooks <span class="preco">R$ 100</span></a>
+<a href="https://pay.kiwify.com.br/2ZNnsZm" target="_blank" rel="noopener" class="ebook-marquee-item">Crie Seu Site Completo com Banco de Dados <span class="preco">R$ 25</span></a>
+<a href="https://pay.kiwify.com.br/um4b8yP" target="_blank" rel="noopener" class="ebook-marquee-item">Crie um App Grátis do Zero até Publicar <span class="preco">R$ 22</span></a>
+<a href="https://pay.kiwify.com.br/Upxk2sr" target="_blank" rel="noopener" class="ebook-marquee-item">Automação de Atendimento no WhatsApp <span class="preco">R$ 25</span></a>
+<a href="https://pay.kiwify.com.br/Ny3E1F2" target="_blank" rel="noopener" class="ebook-marquee-item">Copywriting e Funis de Venda com Claude <span class="preco">R$ 20</span></a>
+<a href="https://pay.kiwify.com.br/OEnP5Uv" target="_blank" rel="noopener" class="ebook-marquee-item">Cowork: Seu Assistente de Escritório <span class="preco">R$ 18</span></a>
+<a href="https://pay.kiwify.com.br/J3E0mms" target="_blank" rel="noopener" class="ebook-marquee-item">Claude para Criadores de Conteúdo <span class="preco">R$ 18</span></a>
+<a href="https://pay.kiwify.com.br/azzvtoq" target="_blank" rel="noopener" class="ebook-marquee-item">Integrações do Zero <span class="preco">R$ 5</span></a>
+<a href="https://pay.kiwify.com.br/XlxJpCs" target="_blank" rel="noopener" class="ebook-marquee-item">Empacote Seu Conhecimento em Skills <span class="preco">R$ 20</span></a>
+<a href="https://pay.kiwify.com.br/l8pSgDz" target="_blank" rel="noopener" class="ebook-marquee-item">Consultoria Relâmpago de IA <span class="preco">R$ 18</span></a>
+<a href="https://pay.kiwify.com.br/i1pyfA1" target="_blank" rel="noopener" class="ebook-marquee-item">Automatize Planilhas e Relatórios <span class="preco">R$ 20</span></a>
+<a href="https://pay.kiwify.com.br/5nLaBTU" target="_blank" rel="noopener" class="ebook-marquee-item">Treinamento Corporativo Vendável <span class="preco">R$ 25</span></a>
+<a href="https://pay.kiwify.com.br/ulq37zL" target="_blank" rel="noopener" class="ebook-marquee-item">Pesquisa e Resumo como Serviço <span class="preco">R$ 17</span></a>
+<a href="https://pay.kiwify.com.br/Xl4vDCR" 
