@@ -5,78 +5,181 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aula — Use o Claude de Verdade</title>
 <link rel="stylesheet" href="../css/style.css">
+<style>
+.quiz-box { margin-top: 32px; padding: 24px; background: var(--cinza-claro, #F2EFEA); border-radius: 14px; }
+.quiz-box h3 { margin-top: 0; }
+.quiz-q { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid rgba(43,33,24,0.08); }
+.quiz-q:last-of-type { border-bottom: none; }
+.quiz-q p.quiz-pergunta { font-weight: 600; margin-bottom: 10px; }
+.quiz-opt { display: block; padding: 10px 14px; margin-bottom: 8px; border-radius: 8px; border: 1px solid rgba(43,33,24,0.15); cursor: pointer; transition: background-color 0.15s ease, border-color 0.15s ease; }
+.quiz-opt:hover { background: rgba(193,95,60,0.08); }
+.quiz-opt input { margin-right: 10px; }
+.quiz-opt.correta { border-color: var(--verde, #4C6B4F); background: rgba(76,107,79,0.12); }
+.quiz-opt.errada { border-color: #b3453a; background: rgba(179,69,58,0.1); }
+.quiz-feedback { margin-top: 16px; font-weight: 600; }
+.quiz-feedback.ok { color: var(--verde, #4C6B4F); }
+.quiz-feedback.fail { color: #b3453a; }
+.locked-msg { padding: 14px 18px; background: #f2efea; border-radius: 10px; color: var(--cinza, #5B5147); font-size: 0.95rem; }
+</style>
 </head>
 <body class="app-shell">
 
 <nav class="app-nav">
-  <div class="logo">Use o Claude de Verdade</div>
-  <a href="#" class="logout" id="btn-logout">Sair</a>
+<div class="logo">Use o Claude de Verdade</div>
+<a href="#" class="logout" id="btn-logout">Sair</a>
 </nav>
 
 <main class="app-main" id="main-content">
-  <p>Carregando...</p>
+<p>Carregando...</p>
 </main>
 
 <script type="module">
-  import { supabase, requireSession, logout } from "./supabase-client.js";
+import { supabase, requireSession, logout } from "./supabase-client.js";
 
-  document.getElementById('btn-logout').onclick = (e) => { e.preventDefault(); logout(); };
+document.getElementById('btn-logout').onclick = (e) => { e.preventDefault(); logout(); };
 
-  const main = document.getElementById('main-content');
-  const params = new URLSearchParams(window.location.search);
-  const num = parseInt(params.get('num'), 10);
+const main = document.getElementById('main-content');
+const params = new URLSearchParams(window.location.search);
+const num = parseInt(params.get('num'), 10);
 
-  async function init() {
-    const session = await requireSession();
-    if (!session) return;
+async function init() {
+  const session = await requireSession();
+  if (!session) return;
 
-    if (!num) {
-      main.innerHTML = '<p>Aula não encontrada. <a href="dashboard.html">Voltar ao painel</a>.</p>';
-      return;
-    }
+  if (!num) {
+    main.innerHTML = '<p>Aula não encontrada. <a href="dashboard.html">Voltar ao painel</a>.</p>';
+    return;
+  }
 
-    const { data: aula, error } = await supabase
-      .from('aulas')
-      .select('num, titulo, conteudo_html, trilha_num')
-      .eq('num', num)
-      .maybeSingle();
+  const { data: aula, error } = await supabase
+    .from('aulas')
+    .select('num, titulo, conteudo_html, trilha_num')
+    .eq('num', num)
+    .maybeSingle();
 
-    if (error || !aula) {
-      main.innerHTML = '<p>Não foi possível carregar esta aula. Verifique se seu acesso está ativo. <a href="dashboard.html">Voltar ao painel</a>.</p>';
-      return;
-    }
+  if (error || !aula) {
+    main.innerHTML = '<p>Não foi possível carregar esta aula. Verifique se seu acesso está ativo. <a href="dashboard.html">Voltar ao painel</a>.</p>';
+    return;
+  }
 
-    const { data: prog } = await supabase
-      .from('progresso')
-      .select('aula_num')
-      .eq('user_id', session.user.id)
-      .eq('aula_num', num)
-      .maybeSingle();
+  const { data: progressoTudo } = await supabase
+    .from('progresso')
+    .select('aula_num')
+    .eq('user_id', session.user.id);
 
-    const jaConcluida = !!prog;
+  const concluidas = new Set((progressoTudo || []).map(p => p.aula_num));
+  const jaConcluida = concluidas.has(num);
+  let proximaLiberada = 1;
+  for (let n = 1; n <= 24; n++) {
+    if (concluidas.has(n)) proximaLiberada = n + 1; else break;
+  }
+  const podeAcessar = num <= proximaLiberada;
 
+  if (!podeAcessar) {
     main.innerHTML = `
       <a href="dashboard.html" style="color:var(--cinza); text-decoration:none; font-size:0.9rem;">&larr; Voltar ao painel</a>
       <h1 style="margin-top:12px;">Aula ${aula.num} — ${aula.titulo}</h1>
-      <div class="lesson-content">${aula.conteudo_html}</div>
-      <button class="btn ${jaConcluida ? 'btn-secondary' : 'btn-primary'}" id="btn-concluir" style="margin-top:24px;">
-        ${jaConcluida ? '✓ Aula concluída' : 'Marcar como concluída'}
-      </button>
-      <div style="margin-top:20px; display:flex; justify-content:space-between;">
-        ${num > 1 ? `<a href="aula.html?num=${num - 1}" class="btn btn-secondary">&larr; Aula anterior</a>` : '<span></span>'}
-        <a href="aula.html?num=${num + 1}" class="btn btn-secondary">Próxima aula &rarr;</a>
-      </div>
+      <div class="locked-msg">🔒 Esta aula ainda está bloqueada. Termine a aula ${proximaLiberada} (e o quiz dela) pra desbloquear esta.</div>
+      <div style="margin-top:20px;"><a href="aula.html?num=${proximaLiberada}" class="btn btn-primary">Ir pra aula ${proximaLiberada}</a></div>
     `;
-
-    if (!jaConcluida) {
-      document.getElementById('btn-concluir').onclick = async () => {
-        await supabase.from('progresso').upsert({ user_id: session.user.id, aula_num: num });
-        window.location.reload();
-      };
-    }
+    return;
   }
 
-  init();
+  const { data: perguntas } = await supabase
+    .from('quiz')
+    .select('id, ordem, pergunta, opcao_a, opcao_b, opcao_c, correta')
+    .eq('aula_num', num)
+    .order('ordem');
+
+  const temQuiz = perguntas && perguntas.length > 0;
+
+  let quizHtml = '';
+  if (temQuiz && !jaConcluida) {
+    quizHtml = `
+      <div class="quiz-box">
+        <h3>Antes de seguir: responda pra desbloquear a próxima aula</h3>
+        <form id="quiz-form">
+          ${perguntas.map((q, qi) => `
+            <div class="quiz-q" data-qid="${q.id}" data-correta="${q.correta}">
+              <p class="quiz-pergunta">${qi + 1}. ${q.pergunta}</p>
+              ${['a','b','c'].map(op => `
+                <label class="quiz-opt" data-op="${op}">
+                  <input type="radio" name="q${q.id}" value="${op}"> ${q['opcao_' + op]}
+                </label>
+              `).join('')}
+            </div>
+          `).join('')}
+          <button type="submit" class="btn btn-primary" id="btn-verificar">Verificar respostas</button>
+          <div class="quiz-feedback" id="quiz-feedback"></div>
+        </form>
+      </div>
+    `;
+  } else if (temQuiz && jaConcluida) {
+    quizHtml = `<div class="quiz-box"><p style="margin:0; color:var(--verde);">✓ Você já concluiu o quiz desta aula.</p></div>`;
+  }
+
+  main.innerHTML = `
+    <a href="dashboard.html" style="color:var(--cinza); text-decoration:none; font-size:0.9rem;">&larr; Voltar ao painel</a>
+    <h1 style="margin-top:12px;">Aula ${aula.num} — ${aula.titulo}</h1>
+    <div class="lesson-content">${aula.conteudo_html}</div>
+    ${quizHtml}
+    <button class="btn ${jaConcluida ? 'btn-secondary' : 'btn-primary'}" id="btn-concluir" style="margin-top:24px;" ${(!jaConcluida && temQuiz) ? 'disabled' : ''}>
+      ${jaConcluida ? '✓ Aula concluída' : 'Marcar como concluída'}
+    </button>
+    <div style="margin-top:20px; display:flex; justify-content:space-between;">
+      ${num > 1 ? `<a href="aula.html?num=${num - 1}" class="btn btn-secondary">&larr; Aula anterior</a>` : '<span></span>'}
+      ${(jaConcluida || num < proximaLiberada) ? `<a href="aula.html?num=${num + 1}" class="btn btn-secondary">Próxima aula &rarr;</a>` : '<span></span>'}
+    </div>
+  `;
+
+  async function marcarConcluida() {
+    await supabase.from('progresso').upsert({ user_id: session.user.id, aula_num: num });
+    window.location.reload();
+  }
+
+  const btnConcluir = document.getElementById('btn-concluir');
+  if (!jaConcluida && !temQuiz) {
+    btnConcluir.onclick = marcarConcluida;
+  }
+
+  if (temQuiz && !jaConcluida) {
+    document.getElementById('quiz-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const blocos = document.querySelectorAll('.quiz-q');
+      let todasCorretas = true;
+      blocos.forEach(bloco => {
+        const correta = bloco.dataset.correta;
+        const selecionada = bloco.querySelector('input:checked');
+        bloco.querySelectorAll('.quiz-opt').forEach(opt => opt.classList.remove('correta', 'errada'));
+        if (!selecionada) {
+          todasCorretas = false;
+          return;
+        }
+        const valor = selecionada.value;
+        const optEl = bloco.querySelector(`.quiz-opt[data-op="${valor}"]`);
+        if (valor === correta) {
+          optEl.classList.add('correta');
+        } else {
+          optEl.classList.add('errada');
+          bloco.querySelector(`.quiz-opt[data-op="${correta}"]`).classList.add('correta');
+          todasCorretas = false;
+        }
+      });
+      const feedback = document.getElementById('quiz-feedback');
+      if (todasCorretas) {
+        feedback.textContent = '✓ Tudo certo! Marcando aula como concluída...';
+        feedback.className = 'quiz-feedback ok';
+        document.getElementById('btn-concluir').disabled = false;
+        setTimeout(marcarConcluida, 900);
+      } else {
+        feedback.textContent = 'Alguma resposta não está certa ainda. Confira em verde a opção correta e tente de novo.';
+        feedback.className = 'quiz-feedback fail';
+      }
+    });
+  }
+}
+
+init();
 </script>
 </body>
 </html>
