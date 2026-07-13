@@ -1,57 +1,100 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" id="html-root">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Entrar — Use o Claude de Verdade</title>
+<title id="page-title">Entrar — Use o Claude de Verdade</title>
 <link rel="stylesheet" href="../css/style.css">
 </head>
 <body class="app-shell">
 
 <div style="max-width:420px;margin:24px auto 0;padding:0 24px;">
-<a href="../index.html" style="display:inline-flex;align-items:center;gap:6px;color:var(--cinza);text-decoration:none;font-size:0.9rem;font-weight:600;">&larr; Voltar ao site</a>
+<a href="../index.html" class="auth-back" data-i18n="back">&larr; Voltar ao site</a>
 </div>
 
 <div class="auth-card">
 <h1>Use o Claude de Verdade</h1>
-<p style="text-align:center;color:var(--cinza);margin-top:-8px;">O curso é 100% gratuito. Crie seu acesso em segundos.</p>
+<p style="text-align:center;color:var(--cinza);margin-top:-8px;" data-i18n="tagline">O curso é 100% gratuito. Crie seu acesso em segundos.</p>
 
 <div id="login-form">
 <div class="field">
-<label for="login-email">E-mail</label>
+<label for="login-email" data-i18n="emailLabel">E-mail</label>
 <input type="email" id="login-email" placeholder="voce@email.com">
 </div>
 <div class="field">
-<label for="login-password">Senha</label>
-<input type="password" id="login-password" placeholder="Sua senha">
+<label for="login-password" data-i18n="passwordLabel">Senha</label>
+<input type="password" id="login-password" data-i18n-placeholder="passwordPlaceholder" placeholder="Sua senha">
 </div>
-<button class="btn btn-primary btn-block" id="btn-login">Entrar</button>
+<button class="btn btn-primary btn-block" id="btn-login" data-i18n="loginBtn">Entrar</button>
 <div class="form-msg" id="login-msg"></div>
 <div class="auth-switch">
-Ainda não tem uma conta?
-<a href="#" id="show-signup">Criar acesso grátis</a>
+<span data-i18n="noAccount">Ainda não tem uma conta?</span>
+<a href="#" id="show-signup" data-i18n="createFree">Criar acesso grátis</a>
 </div>
 </div>
 
 <div id="signup-form" style="display:none;">
 <div class="field">
-<label for="signup-email">Seu e-mail</label>
+<label for="signup-email" data-i18n="yourEmailLabel">Seu e-mail</label>
 <input type="email" id="signup-email" placeholder="voce@email.com">
 </div>
 <div class="field">
-<label for="signup-password">Crie uma senha</label>
-<input type="password" id="signup-password" placeholder="Mínimo 6 caracteres">
+<label for="signup-password" data-i18n="createPasswordLabel">Crie uma senha</label>
+<input type="password" id="signup-password" data-i18n-placeholder="minChars" placeholder="Mínimo 6 caracteres">
 </div>
-<button class="btn btn-primary btn-block" id="btn-signup">Criar acesso grátis</button>
+<button class="btn btn-primary btn-block" id="btn-signup" data-i18n="createFree">Criar acesso grátis</button>
 <div class="form-msg" id="signup-msg"></div>
 <div class="auth-switch">
-Já tem senha? <a href="#" id="show-login">Voltar pro login</a>
+<span data-i18n="hasPassword">Já tem senha?</span> <a href="#" id="show-login" data-i18n="backToLogin">Voltar pro login</a>
 </div>
 </div>
 </div>
 
 <script type="module">
 import { supabase } from "./supabase-client.js";
+
+const dict = {
+en: {
+back: "&larr; Back to site",
+tagline: "The course is 100% free. Create your access in seconds.",
+emailLabel: "Email",
+passwordLabel: "Password",
+passwordPlaceholder: "Your password",
+loginBtn: "Log in",
+noAccount: "Don't have an account yet?",
+createFree: "Create free access",
+yourEmailLabel: "Your email",
+createPasswordLabel: "Create a password",
+minChars: "Minimum 6 characters",
+hasPassword: "Already have a password?",
+backToLogin: "Back to login",
+title: "Log in — Use o Claude de Verdade",
+enteringMsg: "Logging in...",
+wrongCreds: "Incorrect email or password.",
+creatingMsg: "Creating your access...",
+pwTooShort: "Password needs at least 6 characters.",
+signupFail: "Couldn't create your access: ",
+signupOk: "Access created! Redirecting to the course...",
+signupOkVerify: "Access created! Check your email if asked, then log in."
+}
+};
+
+const STORAGE_KEY = 'ucdv_lang';
+const lang = localStorage.getItem(STORAGE_KEY) || 'pt';
+const isEn = lang === 'en';
+
+if (isEn) {
+document.getElementById('html-root').lang = 'en';
+document.getElementById('page-title').textContent = dict.en.title;
+document.querySelectorAll('[data-i18n]').forEach(el => {
+const key = el.getAttribute('data-i18n');
+if (dict.en[key]) el.innerHTML = dict.en[key];
+});
+document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+const key = el.getAttribute('data-i18n-placeholder');
+if (dict.en[key]) el.setAttribute('placeholder', dict.en[key]);
+});
+}
 
 const loginForm = document.getElementById('login-form');
 const signupForm = document.getElementById('signup-form');
@@ -62,10 +105,10 @@ document.getElementById('btn-login').onclick = async () => {
 const email = document.getElementById('login-email').value.trim();
 const password = document.getElementById('login-password').value;
 const msg = document.getElementById('login-msg');
-msg.textContent = 'Entrando...'; msg.className = 'form-msg';
+msg.textContent = isEn ? dict.en.enteringMsg : 'Entrando...'; msg.className = 'form-msg';
 const { error } = await supabase.auth.signInWithPassword({ email, password });
 if (error) {
-msg.textContent = 'E-mail ou senha incorretos.';
+msg.textContent = isEn ? dict.en.wrongCreds : 'E-mail ou senha incorretos.';
 msg.className = 'form-msg error';
 return;
 }
@@ -77,23 +120,23 @@ const email = document.getElementById('signup-email').value.trim();
 const password = document.getElementById('signup-password').value;
 const msg = document.getElementById('signup-msg');
 if (password.length < 6) {
-msg.textContent = 'A senha precisa ter pelo menos 6 caracteres.';
+msg.textContent = isEn ? dict.en.pwTooShort : 'A senha precisa ter pelo menos 6 caracteres.';
 msg.className = 'form-msg error';
 return;
 }
-msg.textContent = 'Criando seu acesso...'; msg.className = 'form-msg';
+msg.textContent = isEn ? dict.en.creatingMsg : 'Criando seu acesso...'; msg.className = 'form-msg';
 const { data, error } = await supabase.auth.signUp({ email, password });
 if (error) {
-msg.textContent = 'Não foi possível criar o acesso: ' + error.message;
+msg.textContent = (isEn ? dict.en.signupFail : 'Não foi possível criar o acesso: ') + error.message;
 msg.className = 'form-msg error';
 return;
 }
-msg.textContent = 'Acesso criado! Redirecionando pro curso...';
+msg.textContent = isEn ? dict.en.signupOk : 'Acesso criado! Redirecionando pro curso...';
 msg.className = 'form-msg ok';
 if (data.session) {
 setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
 } else {
-msg.textContent = 'Acesso criado! Verifique seu e-mail se for solicitado, depois faça login.';
+msg.textContent = isEn ? dict.en.signupOkVerify : 'Acesso criado! Verifique seu e-mail se for solicitado, depois faça login.';
 }
 };
 </script>
