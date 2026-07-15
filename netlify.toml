@@ -11,3 +11,8 @@
   from = "/entrar"
   to = "/app/login.html"
   status = 200
+
+[[redirects]]
+  from = "/pricing"
+  to = "/pricing.html"
+  status = 200
