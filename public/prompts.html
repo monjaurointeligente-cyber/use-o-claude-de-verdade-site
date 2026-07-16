@@ -3,1124 +3,780 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PromptPalm - Biblioteca Completa de 1.007 Prompts</title>
+    <title>PromptPalm - 150 Prompts para Claude AI</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
             color: #333;
-            line-height: 1.6;
-            min-height: 100vh;
-            padding: 20px;
         }
-        
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .buy-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .buy-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .user-menu {
+            display: none;
+        }
+
+        .user-menu.active {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            overflow: hidden;
+            padding: 20px;
         }
-        
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px 20px;
-            text-align: center;
-        }
-        
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        
-        .header p {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-        
+
         .stats {
-            display: flex;
-            justify-content: space-around;
-            background: rgba(0,0,0,0.1);
-            padding: 20px;
-            flex-wrap: wrap;
-            gap: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
         }
-        
-        .stat {
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 2em;
-            font-weight: bold;
-        }
-        
-        .stat-label {
-            opacity: 0.9;
-            font-size: 0.9em;
-        }
-        
-        .search-box {
-            padding: 20px;
-            background: #f8f9fa;
-            border-bottom: 2px solid #e9ecef;
-        }
-        
-        .search-box input {
-            width: 100%;
-            padding: 12px 20px;
-            border: 2px solid #667eea;
-            border-radius: 5px;
-            font-size: 1em;
-        }
-        
-        .search-box input:focus {
-            outline: none;
-            border-color: #764ba2;
-            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
-        }
-        
-        .tabs {
-            display: flex;
-            background: #f8f9fa;
-            border-bottom: 2px solid #e9ecef;
-            overflow-x: auto;
-            flex-wrap: wrap;
-        }
-        
-        .tab {
-            flex: 1;
-            min-width: 150px;
-            padding: 15px 20px;
-            background: #f8f9fa;
-            border: none;
-            cursor: pointer;
-            font-size: 0.95em;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-        
-        .tab:hover {
-            background: #e9ecef;
-        }
-        
-        .tab.active {
-            border-bottom-color: #667eea;
+
+        .stat-box {
             background: white;
-            color: #667eea;
-            font-weight: bold;
-        }
-        
-        .content {
-            padding: 30px 20px;
-            min-height: 400px;
-        }
-        
-        .category-content {
-            display: none;
-        }
-        
-        .category-content.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .prompt-card {
-            background: white;
-            border: 1px solid #e9ecef;
+            padding: 20px;
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        
-        .prompt-card:hover {
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
             border-color: #667eea;
         }
-        
-        .prompt-title {
-            font-weight: bold;
-            color: #667eea;
-            font-size: 1.05em;
-            margin-bottom: 8px;
-            font-family: 'Courier New', monospace;
+
+        .prompts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
         }
-        
-        .prompt-desc {
-            color: #666;
-            font-size: 0.95em;
-            background: #f8f9fa;
-            padding: 8px 12px;
+
+        .prompt-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .prompt-card:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .prompt-badge {
+            display: inline-block;
+            padding: 4px 10px;
             border-radius: 4px;
-            border-left: 3px solid #764ba2;
-            margin-top: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
         }
-        
+
+        .badge-basic {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-premium {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .prompt-category {
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .prompt-text {
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
         .copy-btn {
+            width: 100%;
             background: #667eea;
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
+            padding: 10px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9em;
-            margin-top: 10px;
-            transition: all 0.3s ease;
+            font-weight: 600;
+            transition: all 0.3s;
         }
-        
+
         .copy-btn:hover {
             background: #764ba2;
-            transform: scale(1.05);
         }
-        
-        .footer {
-            background: #f8f9fa;
-            padding: 20px;
-            text-align: center;
-            color: #999;
-            border-top: 1px solid #e9ecef;
+
+        .copy-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
-        
-        .category-title {
-            font-size: 1.3em;
-            color: #667eea;
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal h2 {
             margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e9ecef;
+            color: #333;
         }
-        
-        .prompt-count {
+
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-input {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-btn {
+            padding: 12px;
             background: #667eea;
             color: white;
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            margin-left: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
         }
-        
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8em;
-            }
-            
-            .tab {
-                min-width: 100px;
-                font-size: 0.85em;
-                padding: 10px 12px;
-            }
-            
-            .stats {
-                flex-direction: column;
-                gap: 10px;
-            }
+
+        .modal-btn:hover {
+            background: #764ba2;
+        }
+
+        .close-modal {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .plan-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .plan-card {
+            border: 2px solid #e0e0e0;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .plan-card:hover {
+            border-color: #667eea;
+        }
+
+        .plan-card.selected {
+            border-color: #667eea;
+            background: #f0f0ff;
+        }
+
+        .plan-name {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .plan-price {
+            font-size: 20px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .plan-features {
+            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .error.active {
+            display: block;
+        }
+
+        .restricted {
+            opacity: 0.5;
+            position: relative;
+        }
+
+        .restricted::after {
+            content: '🔒 PRO';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #c2185b;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🎯 PromptPalm</h1>
-            <p>Biblioteca Completa de Prompts de IA para Todos os Casos de Uso</p>
-        </div>
-        
-        <div class="stats">
-            <div class="stat">
-                <div class="stat-number">1.007</div>
-                <div class="stat-label">Prompts Totais</div>
+    <header>
+        <div class="logo">🤖 PromptPalm</div>
+        <div class="header-right">
+            <button class="buy-btn" id="buyBtn" onclick="abrirCompra()">💳 Comprar Acesso</button>
+            <div class="user-menu" id="userMenu">
+                <span id="userEmail"></span>
+                <button class="logout-btn" onclick="fazerLogout()">Sair</button>
             </div>
-            <div class="stat">
-                <div class="stat-number">16</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number">150</div>
+                <div class="stat-label">Prompts Disponíveis</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="acessoPrompts">150</div>
+                <div class="stat-label">Para Você</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">15</div>
                 <div class="stat-label">Categorias</div>
             </div>
-            <div class="stat">
-                <div class="stat-number">∞</div>
-                <div class="stat-label">Possibilidades</div>
-            </div>
         </div>
-        
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 Buscar prompt (Ctrl+F também funciona)..." onkeyup="searchPrompts()">
+
+        <div class="filters">
+            <button class="filter-btn active" onclick="filtrar('todos')">Todos (150)</button>
+            <button class="filter-btn" onclick="filtrar('basico')">Básico (60)</button>
+            <button class="filter-btn" onclick="filtrar('premium')">Premium (90)</button>
         </div>
-        
-        <div class="tabs">
-            <button class="tab active" onclick="showCategory(0)">Copywriting & Marketing <span class="prompt-count">10</span></button>
-            <button class="tab " onclick="showCategory(1)">Desenvolvimento & Programação <span class="prompt-count">10</span></button>
-            <button class="tab " onclick="showCategory(2)">Design & Criatividade <span class="prompt-count">10</span></button>
-            <button class="tab " onclick="showCategory(3)">Educação & Aprendizado <span class="prompt-count">10</span></button>
-            <button class="tab " onclick="showCategory(4)">Redes Sociais & Conteúdo <span class="prompt-count">10</span></button>
-            <button class="tab " onclick="showCategory(5)">Negócios & Empreendedorismo <span class="prompt-count">10</span></button>
-            <button class="tab " onclick="showCategory(6)">SEO & Marketing Digital <span class="prompt-count">10</span></button>
-            <button class="tab " onclick="showCategory(7)">Vendas & Negociação <span class="prompt-count">10</span></button>
-            <button class="tab " onclick="showCategory(8)">Atendimento & Suporte <span class="prompt-count">10</span></button>
-            <button class="tab " onclick="showCategory(9)">Conteúdo & Redação <span class="prompt-count">10</span></button>
-            <button class="tab " onclick="showCategory(10)">Produtividade & Organização <span class="prompt-count">10</span></button>
-            <button class="tab " onclick="showCategory(11)">Relacionamentos & Comunicação <span class="prompt-count">10</span></button>
-            <button class="tab " onclick="showCategory(12)">Análise de Dados & Insights <span class="prompt-count">10</span></button>
-            <button class="tab " onclick="showCategory(13)">Criatividade & Inovação <span class="prompt-count">10</span></button>
-            <button class="tab " onclick="showCategory(14)">Pessoal & Desenvolvimento <span class="prompt-count">10</span></button>
+
+        <div id="loginRequired" style="background: #fce4ec; color: #c2185b; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none;">
+            📌 <strong>Faça login para copiar prompts!</strong> Alguns recursos estão restritos. 
+            <button class="buy-btn" style="margin-left: 10px; font-size: 12px;" onclick="abrirLogin()">Fazer Login</button>
         </div>
-        
-        <div class="content">
-            <div class="category-content active" id="category-0">
-                <h2 class="category-title">Copywriting & Marketing</h2>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie uma copy persuasiva para vender um curso online de [TOPICO]</div>
-                    <div class="prompt-desc">Gera texto de vendas de alta conversão</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie uma copy persuasiva para vender um curso online de [TOPICO]')" title="Copiar prompt">📋 Copiar Prompt</button>
+
+        <div class="prompts-grid" id="promptsGrid"></div>
+    </div>
+
+    <!-- Modal de Compra -->
+    <div class="modal" id="compraModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="fecharModal('compraModal')">&times;</span>
+            <h2>💳 Escolha seu Plano</h2>
+            
+            <div class="plan-selector">
+                <div class="plan-card" onclick="selecionarPlano('basic')">
+                    <div class="plan-name">PromptPalm BÁSICO</div>
+                    <div class="plan-price">R$ 29,90<br><span style="font-size: 14px; color: #666;">/mês</span></div>
+                    <div class="plan-features">✅ 60 prompts<br>✅ Atualizações semanais</div>
                 </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva uma sequência de emails de promoção para [PRODUTO]</div>
-                    <div class="prompt-desc">Série de emails para aumentar conversões</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva uma sequência de emails de promoção para [PRODUTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um headline irresistível para [NICHE]</div>
-                    <div class="prompt-desc">Títulos que capturam atenção</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um headline irresistível para [NICHE]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um case de sucesso fictício para [PRODUTO/SERVIÇO]</div>
-                    <div class="prompt-desc">Prova social convincente</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um case de sucesso fictício para [PRODUTO/SERVIÇO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva uma landing page para [PRODUTO]</div>
-                    <div class="prompt-desc">Página de conversão completa</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva uma landing page para [PRODUTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere uma estratégia de reposicionamento para [MARCA]</div>
-                    <div class="prompt-desc">Rebranding e repositioning</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere uma estratégia de reposicionamento para [MARCA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um funnel de vendas para [NEGÓCIO]</div>
-                    <div class="prompt-desc">Estratégia de funil de vendas</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um funnel de vendas para [NEGÓCIO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva copy para [REDE SOCIAL] sobre [TOPICO]</div>
-                    <div class="prompt-desc">Posts otimizados por plataforma</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva copy para [REDE SOCIAL] sobre [TOPICO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva uma proposta de valor para [PRODUTO]</div>
-                    <div class="prompt-desc">Diferencial competitivo claro</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva uma proposta de valor para [PRODUTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um roteiro de venda para [PRODUTO]</div>
-                    <div class="prompt-desc">Script de vendas eficaz</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um roteiro de venda para [PRODUTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
+                <div class="plan-card selected" onclick="selecionarPlano('pro')">
+                    <div class="plan-name">PromptPalm PRO</div>
+                    <div class="plan-price">R$ 99,90<br><span style="font-size: 14px; color: #666;">/mês</span></div>
+                    <div class="plan-features">✅ 150 prompts<br>✅ Acesso prioritário</div>
                 </div>
             </div>
-            <div class="category-content " id="category-1">
-                <h2 class="category-title">Desenvolvimento & Programação</h2>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere código Python para [FUNCIONALIDADE]</div>
-                    <div class="prompt-desc">Snippets Python prontos</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere código Python para [FUNCIONALIDADE]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie uma função JavaScript para [FUNCIONALIDADE]</div>
-                    <div class="prompt-desc">Código JS reutilizável</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie uma função JavaScript para [FUNCIONALIDADE]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva uma query SQL para [OPERAÇÃO]</div>
-                    <div class="prompt-desc">Queries otimizadas</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva uma query SQL para [OPERAÇÃO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um algoritmo para [PROBLEMA]</div>
-                    <div class="prompt-desc">Solução algorítmica</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um algoritmo para [PROBLEMA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere testes unitários para [FUNÇÃO]</div>
-                    <div class="prompt-desc">Testes automatizados</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere testes unitários para [FUNÇÃO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um componente React para [INTERFACE]</div>
-                    <div class="prompt-desc">Componentes reutilizáveis</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um componente React para [INTERFACE]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva documentação técnica para [API]</div>
-                    <div class="prompt-desc">Docs claras e completas</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva documentação técnica para [API]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um plano de refatoração para [CÓDIGO]</div>
-                    <div class="prompt-desc">Melhorias de código</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um plano de refatoração para [CÓDIGO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere um README para o projeto [NOME]</div>
-                    <div class="prompt-desc">Documentação de projeto</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere um README para o projeto [NOME]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um Dockerfile para [APLICAÇÃO]</div>
-                    <div class="prompt-desc">Containerização rápida</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um Dockerfile para [APLICAÇÃO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-            </div>
-            <div class="category-content " id="category-2">
-                <h2 class="category-title">Design & Criatividade</h2>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Descreva um design de interface para [APLICAÇÃO]</div>
-                    <div class="prompt-desc">UI/UX detalhado</div>
-                    <button class="copy-btn" onclick="copyPrompt('Descreva um design de interface para [APLICAÇÃO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um paleta de cores para [MARCA/PROJETO]</div>
-                    <div class="prompt-desc">Cores harmoniosas</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um paleta de cores para [MARCA/PROJETO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um conceito visual para [CAMPANHA]</div>
-                    <div class="prompt-desc">Direção criativa</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um conceito visual para [CAMPANHA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva brief criativo para [PROJETO]</div>
-                    <div class="prompt-desc">Briefing completo</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva brief criativo para [PROJETO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere ideias de design para [PRODUTO]</div>
-                    <div class="prompt-desc">Brainstorm visual</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere ideias de design para [PRODUTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um mood board para [PROJETO]</div>
-                    <div class="prompt-desc">Referências visuais</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um mood board para [PROJETO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva uma identidade visual para [EMPRESA]</div>
-                    <div class="prompt-desc">Branding completo</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva uma identidade visual para [EMPRESA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva diretrizes de design para [MARCA]</div>
-                    <div class="prompt-desc">Design system</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva diretrizes de design para [MARCA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere variações de layout para [PÁGINA]</div>
-                    <div class="prompt-desc">A/B testing visuais</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere variações de layout para [PÁGINA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um storyboard para [VÍDEO/ANIMAÇÃO]</div>
-                    <div class="prompt-desc">Planejamento visual</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um storyboard para [VÍDEO/ANIMAÇÃO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-            </div>
-            <div class="category-content " id="category-3">
-                <h2 class="category-title">Educação & Aprendizado</h2>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um plano de aula para ensinar [TOPICO]</div>
-                    <div class="prompt-desc">Estrutura de aula</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um plano de aula para ensinar [TOPICO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva exercícios práticos sobre [ASSUNTO]</div>
-                    <div class="prompt-desc">Atividades educacionais</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva exercícios práticos sobre [ASSUNTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva um resumo de [LIVRO/ARTIGO]</div>
-                    <div class="prompt-desc">Síntese rápida</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva um resumo de [LIVRO/ARTIGO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere questões de múltipla escolha sobre [TOPICO]</div>
-                    <div class="prompt-desc">Avaliações automáticas</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere questões de múltipla escolha sobre [TOPICO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um guia de estudo para [DISCIPLINA]</div>
-                    <div class="prompt-desc">Material de aprendizado</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um guia de estudo para [DISCIPLINA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um roteiro de pesquisa sobre [TEMA]</div>
-                    <div class="prompt-desc">Estrutura de pesquisa</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um roteiro de pesquisa sobre [TEMA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva uma explicação simples de [CONCEITO_COMPLEXO]</div>
-                    <div class="prompt-desc">Vulgarização científica</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva uma explicação simples de [CONCEITO_COMPLEXO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere um mapa mental para [ASSUNTO]</div>
-                    <div class="prompt-desc">Organização de ideias</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere um mapa mental para [ASSUNTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um curso online sobre [TOPICO]</div>
-                    <div class="prompt-desc">Estrutura de curso</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um curso online sobre [TOPICO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um glossário para [ÁREA]</div>
-                    <div class="prompt-desc">Terminologia</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um glossário para [ÁREA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-            </div>
-            <div class="category-content " id="category-4">
-                <h2 class="category-title">Redes Sociais & Conteúdo</h2>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie uma série de posts para Instagram sobre [TOPICO]</div>
-                    <div class="prompt-desc">Content calendar</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie uma série de posts para Instagram sobre [TOPICO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva roteiros para TikTok sobre [ASSUNTO]</div>
-                    <div class="prompt-desc">Vídeos virais</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva roteiros para TikTok sobre [ASSUNTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva uma estratégia de LinkedIn para [PROFISSÃO]</div>
-                    <div class="prompt-desc">Personal branding</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva uma estratégia de LinkedIn para [PROFISSÃO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere captions criativas para fotos sobre [TEMA]</div>
-                    <div class="prompt-desc">Textos para redes</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere captions criativas para fotos sobre [TEMA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um hashtag strategy para [MARCA]</div>
-                    <div class="prompt-desc">Hashtags otimizadas</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um hashtag strategy para [MARCA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva um roteiro de YouTube sobre [TOPICO]</div>
-                    <div class="prompt-desc">Script de vídeo</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva um roteiro de YouTube sobre [TOPICO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um plano de conteúdo para [REDE_SOCIAL]</div>
-                    <div class="prompt-desc">Content strategy</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um plano de conteúdo para [REDE_SOCIAL]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere ideias virais para [NICHO]</div>
-                    <div class="prompt-desc">Tendências e trends</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere ideias virais para [NICHO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie uma comunidade online para [TOPICO]</div>
-                    <div class="prompt-desc">Estratégia de comunidade</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie uma comunidade online para [TOPICO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva newsletters sobre [ASSUNTO]</div>
-                    <div class="prompt-desc">Email marketing</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva newsletters sobre [ASSUNTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-            </div>
-            <div class="category-content " id="category-5">
-                <h2 class="category-title">Negócios & Empreendedorismo</h2>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um plano de negócios para [STARTUP]</div>
-                    <div class="prompt-desc">Business plan completo</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um plano de negócios para [STARTUP]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um pitch deck para [EMPRESA]</div>
-                    <div class="prompt-desc">Apresentação de investimento</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um pitch deck para [EMPRESA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva um plano estratégico para [EMPRESA]</div>
-                    <div class="prompt-desc">Estratégia 5 anos</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva um plano estratégico para [EMPRESA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere ideias de produto para [MERCADO]</div>
-                    <div class="prompt-desc">Inovação de produto</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere ideias de produto para [MERCADO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva uma análise SWOT para [EMPRESA]</div>
-                    <div class="prompt-desc">Análise competitiva</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva uma análise SWOT para [EMPRESA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um modelo de receita para [NEGÓCIO]</div>
-                    <div class="prompt-desc">Monetização</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um modelo de receita para [NEGÓCIO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva um contrato padrão para [SERVIÇO]</div>
-                    <div class="prompt-desc">Documentos legais</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva um contrato padrão para [SERVIÇO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere KPIs para [DEPARTAMENTO]</div>
-                    <div class="prompt-desc">Métricas de sucesso</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere KPIs para [DEPARTAMENTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva uma proposta comercial para [CLIENTE]</div>
-                    <div class="prompt-desc">Proposta de serviço</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva uma proposta comercial para [CLIENTE]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um organograma para [EMPRESA]</div>
-                    <div class="prompt-desc">Estrutura organizacional</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um organograma para [EMPRESA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-            </div>
-            <div class="category-content " id="category-6">
-                <h2 class="category-title">SEO & Marketing Digital</h2>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Otimize este texto para SEO: [TEXTO]</div>
-                    <div class="prompt-desc">Otimização on-page</div>
-                    <button class="copy-btn" onclick="copyPrompt('Otimize este texto para SEO: [TEXTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie uma estratégia de backlinks para [SITE]</div>
-                    <div class="prompt-desc">Link building</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie uma estratégia de backlinks para [SITE]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um plano de conteúdo SEO para [NICHO]</div>
-                    <div class="prompt-desc">Content marketing estratégico</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um plano de conteúdo SEO para [NICHO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva meta descriptions para [PÁGINAS]</div>
-                    <div class="prompt-desc">Meta tags</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva meta descriptions para [PÁGINAS]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere schema markup JSON-LD para [CONTEÚDO]</div>
-                    <div class="prompt-desc">Dados estruturados</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere schema markup JSON-LD para [CONTEÚDO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um audit SEO para [SITE]</div>
-                    <div class="prompt-desc">Diagnóstico completo</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um audit SEO para [SITE]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva estratégia de palavras-chave para [NICHO]</div>
-                    <div class="prompt-desc">Pesquisa de keywords</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva estratégia de palavras-chave para [NICHO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva um artigo de blog otimizado para SEO sobre [TOPICO]</div>
-                    <div class="prompt-desc">Blog post SEO</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva um artigo de blog otimizado para SEO sobre [TOPICO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere uma estratégia de Google Ads para [PRODUTO]</div>
-                    <div class="prompt-desc">SEM strategy</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere uma estratégia de Google Ads para [PRODUTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um plano de growth hacking para [STARTUP]</div>
-                    <div class="prompt-desc">Crescimento rápido</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um plano de growth hacking para [STARTUP]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-            </div>
-            <div class="category-content " id="category-7">
-                <h2 class="category-title">Vendas & Negociação</h2>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um script de chamada de vendas para [PRODUTO]</div>
-                    <div class="prompt-desc">Telemarketing script</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um script de chamada de vendas para [PRODUTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva uma estratégia de follow-up para [CLIENTE]</div>
-                    <div class="prompt-desc">Acompanhamento pós-venda</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva uma estratégia de follow-up para [CLIENTE]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva objeções de vendas e respostas para [PRODUTO]</div>
-                    <div class="prompt-desc">Lidar com objeções</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva objeções de vendas e respostas para [PRODUTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere um plano de demonstração de produto para [SOLUÇÃO]</div>
-                    <div class="prompt-desc">Demo script</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere um plano de demonstração de produto para [SOLUÇÃO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie uma estratégia de precificação para [PRODUTO]</div>
-                    <div class="prompt-desc">Estratégia de preço</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie uma estratégia de precificação para [PRODUTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um funil de vendas para [EMPRESA]</div>
-                    <div class="prompt-desc">Sales funnel</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um funil de vendas para [EMPRESA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva uma proposta de valor para [CLIENTE]</div>
-                    <div class="prompt-desc">Value proposition</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva uma proposta de valor para [CLIENTE]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere uma análise de concorrência para [NICHO]</div>
-                    <div class="prompt-desc">Benchmark competitivo</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere uma análise de concorrência para [NICHO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um CRM strategy para [EMPRESA]</div>
-                    <div class="prompt-desc">Gestão de relacionamento</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um CRM strategy para [EMPRESA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um plano de retenção de clientes para [EMPRESA]</div>
-                    <div class="prompt-desc">Customer retention</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um plano de retenção de clientes para [EMPRESA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-            </div>
-            <div class="category-content " id="category-8">
-                <h2 class="category-title">Atendimento & Suporte</h2>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie templates de resposta para emails de suporte sobre [TOPICO]</div>
-                    <div class="prompt-desc">Suporte ao cliente</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie templates de resposta para emails de suporte sobre [TOPICO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva uma base de conhecimento FAQ para [PRODUTO]</div>
-                    <div class="prompt-desc">FAQ completo</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva uma base de conhecimento FAQ para [PRODUTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva scripts de atendimento para [SITUAÇÃO]</div>
-                    <div class="prompt-desc">Customer service</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva scripts de atendimento para [SITUAÇÃO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere resoluções para reclamações comuns sobre [PRODUTO]</div>
-                    <div class="prompt-desc">Resolução de conflitos</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere resoluções para reclamações comuns sobre [PRODUTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um chatbot script para [EMPRESA]</div>
-                    <div class="prompt-desc">Automação de atendimento</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um chatbot script para [EMPRESA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um onboarding guide para [PRODUTO]</div>
-                    <div class="prompt-desc">Guia de início</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um onboarding guide para [PRODUTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva uma política de retorno para [LOJA]</div>
-                    <div class="prompt-desc">Políticas claras</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva uma política de retorno para [LOJA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere templates de follow-up de satisfação para [SERVIÇO]</div>
-                    <div class="prompt-desc">NPS e feedback</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere templates de follow-up de satisfação para [SERVIÇO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um guia de troubleshooting para [PRODUTO]</div>
-                    <div class="prompt-desc">Resolução de problemas</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um guia de troubleshooting para [PRODUTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um plano de feedback do cliente para [EMPRESA]</div>
-                    <div class="prompt-desc">Coleta de feedback</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um plano de feedback do cliente para [EMPRESA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-            </div>
-            <div class="category-content " id="category-9">
-                <h2 class="category-title">Conteúdo & Redação</h2>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva um artigo sobre [TOPICO]</div>
-                    <div class="prompt-desc">Artigo estruturado</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva um artigo sobre [TOPICO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie uma história para [MARCA]</div>
-                    <div class="prompt-desc">Brand storytelling</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie uma história para [MARCA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um script de vídeo sobre [ASSUNTO]</div>
-                    <div class="prompt-desc">Roteiro de vídeo</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um script de vídeo sobre [ASSUNTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva um podcast script sobre [TOPICO]</div>
-                    <div class="prompt-desc">Roteiro de áudio</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva um podcast script sobre [TOPICO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere um e-book sobre [ASSUNTO]</div>
-                    <div class="prompt-desc">E-book estruturado</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere um e-book sobre [ASSUNTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie uma apresentação sobre [TOPICO]</div>
-                    <div class="prompt-desc">Deck de apresentação</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie uma apresentação sobre [TOPICO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva um editorial sobre [TEMA_CONTROVERSO]</div>
-                    <div class="prompt-desc">Opinion piece</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva um editorial sobre [TEMA_CONTROVERSO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um white paper sobre [ASSUNTO_TÉCNICO]</div>
-                    <div class="prompt-desc">White paper profissional</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um white paper sobre [ASSUNTO_TÉCNICO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere um case study sobre [PROJETO]</div>
-                    <div class="prompt-desc">Estudo de caso</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere um case study sobre [PROJETO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um relatório sobre [TEMA]</div>
-                    <div class="prompt-desc">Relatório estruturado</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um relatório sobre [TEMA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-            </div>
-            <div class="category-content " id="category-10">
-                <h2 class="category-title">Produtividade & Organização</h2>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um sistema de organização para [TIPO_TRABALHO]</div>
-                    <div class="prompt-desc">Sistema de produtividade</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um sistema de organização para [TIPO_TRABALHO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um plano de gestão de tempo para [PROFISSÃO]</div>
-                    <div class="prompt-desc">Time management</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um plano de gestão de tempo para [PROFISSÃO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva um checklist para [PROCESSO]</div>
-                    <div class="prompt-desc">Checklists</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva um checklist para [PROCESSO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere um plano de metas para [PERIODO]</div>
-                    <div class="prompt-desc">Goal setting</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere um plano de metas para [PERIODO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um sistema de priorização para [TAREFAS]</div>
-                    <div class="prompt-desc">Eisenhower matrix</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um sistema de priorização para [TAREFAS]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um hábito para [OBJETIVO]</div>
-                    <div class="prompt-desc">Habit formation</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um hábito para [OBJETIVO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva um plano de vida balanceado para [PESSOA]</div>
-                    <div class="prompt-desc">Life planning</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva um plano de vida balanceado para [PESSOA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere um sistema de tracking de progresso para [META]</div>
-                    <div class="prompt-desc">Progress tracking</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere um sistema de tracking de progresso para [META]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um ritual de produtividade para [ROLE]</div>
-                    <div class="prompt-desc">Daily rituals</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um ritual de produtividade para [ROLE]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um plano de delegação para [MANAGER]</div>
-                    <div class="prompt-desc">Delegation strategy</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um plano de delegação para [MANAGER]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-            </div>
-            <div class="category-content " id="category-11">
-                <h2 class="category-title">Relacionamentos & Comunicação</h2>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um script de comunicação não-violenta para [SITUAÇÃO]</div>
-                    <div class="prompt-desc">Comunicação assertiva</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um script de comunicação não-violenta para [SITUAÇÃO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um plano de feedback construtivo para [CONTEXTO]</div>
-                    <div class="prompt-desc">Feedback profissional</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um plano de feedback construtivo para [CONTEXTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva um guia de resolução de conflitos para [AMBIENTE]</div>
-                    <div class="prompt-desc">Mediação de conflitos</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva um guia de resolução de conflitos para [AMBIENTE]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere ideias para construir relacionamento com [TIPO_PESSOA]</div>
-                    <div class="prompt-desc">Networking</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere ideias para construir relacionamento com [TIPO_PESSOA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um plano de mentoria para [MENTORADO]</div>
-                    <div class="prompt-desc">Programa de mentoria</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um plano de mentoria para [MENTORADO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva uma estratégia de liderança para [CONTEXTO]</div>
-                    <div class="prompt-desc">Leadership</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva uma estratégia de liderança para [CONTEXTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva um discurso motivacional para [AUDIÊNCIA]</div>
-                    <div class="prompt-desc">Motivação</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva um discurso motivacional para [AUDIÊNCIA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere perguntas de conversação para [SITUAÇÃO]</div>
-                    <div class="prompt-desc">Ice breakers</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere perguntas de conversação para [SITUAÇÃO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um código de conduta para [COMUNIDADE]</div>
-                    <div class="prompt-desc">Community guidelines</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um código de conduta para [COMUNIDADE]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um plano de construção de confiança para [EQUIPE]</div>
-                    <div class="prompt-desc">Team building</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um plano de construção de confiança para [EQUIPE]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-            </div>
-            <div class="category-content " id="category-12">
-                <h2 class="category-title">Análise de Dados & Insights</h2>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Analise estes dados: [DADOS]</div>
-                    <div class="prompt-desc">Data analysis</div>
-                    <button class="copy-btn" onclick="copyPrompt('Analise estes dados: [DADOS]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um dashboard de métricas para [DEPARTAMENTO]</div>
-                    <div class="prompt-desc">Business intelligence</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um dashboard de métricas para [DEPARTAMENTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um modelo preditivo para [PROBLEMA]</div>
-                    <div class="prompt-desc">Predictive analytics</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um modelo preditivo para [PROBLEMA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva um relatório de insights sobre [DADOS]</div>
-                    <div class="prompt-desc">Data storytelling</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva um relatório de insights sobre [DADOS]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere visualizações para estes dados: [DATASET]</div>
-                    <div class="prompt-desc">Data visualization</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere visualizações para estes dados: [DATASET]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie uma estratégia de coleta de dados para [NEGÓCIO]</div>
-                    <div class="prompt-desc">Data strategy</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie uma estratégia de coleta de dados para [NEGÓCIO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um test A/B para [EXPERIMENTO]</div>
-                    <div class="prompt-desc">A/B testing</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um test A/B para [EXPERIMENTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva uma análise de tendências para [MERCADO]</div>
-                    <div class="prompt-desc">Market trends</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva uma análise de tendências para [MERCADO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere recomendações baseadas em dados para [DECISÃO]</div>
-                    <div class="prompt-desc">Data-driven decisions</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere recomendações baseadas em dados para [DECISÃO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um scorecard de performance para [EQUIPE]</div>
-                    <div class="prompt-desc">Performance metrics</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um scorecard de performance para [EQUIPE]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-            </div>
-            <div class="category-content " id="category-13">
-                <h2 class="category-title">Criatividade & Inovação</h2>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere ideias inovadoras para [PROBLEMA]</div>
-                    <div class="prompt-desc">Brainstorming</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere ideias inovadoras para [PROBLEMA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um processo de design thinking para [DESAFIO]</div>
-                    <div class="prompt-desc">Design thinking</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um processo de design thinking para [DESAFIO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um workshop de criatividade para [EQUIPE]</div>
-                    <div class="prompt-desc">Innovation workshop</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um workshop de criatividade para [EQUIPE]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva um manifesto criativo para [MARCA]</div>
-                    <div class="prompt-desc">Brand manifesto</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva um manifesto criativo para [MARCA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere cenários futuros para [INDUSTRIA]</div>
-                    <div class="prompt-desc">Futurology</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere cenários futuros para [INDUSTRIA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um processo de prototipagem para [PRODUTO]</div>
-                    <div class="prompt-desc">Prototyping</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um processo de prototipagem para [PRODUTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva uma estratégia de inovação para [EMPRESA]</div>
-                    <div class="prompt-desc">Innovation strategy</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva uma estratégia de inovação para [EMPRESA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva um guia de pensamento lateral para [CONTEXTO]</div>
-                    <div class="prompt-desc">Lateral thinking</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva um guia de pensamento lateral para [CONTEXTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere conexões criativas entre [CONCEITO_A] e [CONCEITO_B]</div>
-                    <div class="prompt-desc">Concept linking</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere conexões criativas entre [CONCEITO_A] e [CONCEITO_B]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um processo de hackathon para [EMPRESA]</div>
-                    <div class="prompt-desc">Hackathon planning</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um processo de hackathon para [EMPRESA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-            </div>
-            <div class="category-content " id="category-14">
-                <h2 class="category-title">Pessoal & Desenvolvimento</h2>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um plano de desenvolvimento profissional para [PROFISSÃO]</div>
-                    <div class="prompt-desc">Career development</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um plano de desenvolvimento profissional para [PROFISSÃO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um guia de autoconhecimento para [PESSOA]</div>
-                    <div class="prompt-desc">Self-discovery</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um guia de autoconhecimento para [PESSOA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva um plano de saúde mental para [SITUAÇÃO]</div>
-                    <div class="prompt-desc">Mental health</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva um plano de saúde mental para [SITUAÇÃO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere uma lista de aprendizados para [EXPERIÊNCIA]</div>
-                    <div class="prompt-desc">Lessons learned</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere uma lista de aprendizados para [EXPERIÊNCIA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um plano de transição de carreira para [SITUAÇÃO]</div>
-                    <div class="prompt-desc">Career transition</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um plano de transição de carreira para [SITUAÇÃO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um programa de bem-estar para [CONTEXTO]</div>
-                    <div class="prompt-desc">Wellness program</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um programa de bem-estar para [CONTEXTO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Escreva uma carta de motivação para [OBJETIVO]</div>
-                    <div class="prompt-desc">Self-motivation</div>
-                    <button class="copy-btn" onclick="copyPrompt('Escreva uma carta de motivação para [OBJETIVO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Gere afirmações positivas para [DESAFIO]</div>
-                    <div class="prompt-desc">Positive affirmations</div>
-                    <button class="copy-btn" onclick="copyPrompt('Gere afirmações positivas para [DESAFIO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Crie um plano de aprendizado de idioma para [IDIOMA]</div>
-                    <div class="prompt-desc">Language learning</div>
-                    <button class="copy-btn" onclick="copyPrompt('Crie um plano de aprendizado de idioma para [IDIOMA]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-title">✨ Desenvolva um plano de fitness para [OBJETIVO]</div>
-                    <div class="prompt-desc">Fitness planning</div>
-                    <button class="copy-btn" onclick="copyPrompt('Desenvolva um plano de fitness para [OBJETIVO]')" title="Copiar prompt">📋 Copiar Prompt</button>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p><strong>PromptPalm</strong> © 2024 | Biblioteca Completa de Prompts de IA</p>
-            <p style="margin-top: 10px; font-size: 0.9em;">💡 Dica: Use Ctrl+F para buscar um prompt específico!</p>
+
+            <a id="checkoutLink" href="https://pay.kiwify.com.br/oNhtJ9N" target="_blank">
+                <button class="modal-btn" style="width: 100%;">Ir para Kiwify - Confirmar Compra</button>
+            </a>
+
+            <p style="font-size: 12px; color: #999; margin-top: 15px; text-align: center;">
+                Após pagar, você receberá um email com suas credenciais de login 📧
+            </p>
         </div>
     </div>
-    
-    <script>
-        function showCategory(index) {
-            // Remover active de todas as abas e conteúdos
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.category-content').forEach(content => content.classList.remove('active'));
+
+    <!-- Modal de Login -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="fecharModal('loginModal')">&times;</span>
+            <h2>🔐 Fazer Login</h2>
             
-            // Adicionar active à aba e conteúdo clicado
-            document.querySelectorAll('.tab')[index].classList.add('active');
-            document.getElementById(`category-${index}`).classList.add('active');
-        }
+            <div id="loginError" class="error"></div>
+
+            <div class="modal-form">
+                <input type="email" id="loginEmail" class="form-input" placeholder="seu@email.com" required>
+                <input type="password" id="loginPassword" class="form-input" placeholder="sua senha" required>
+                <button class="modal-btn" onclick="fazerLogin()">Entrar</button>
+            </div>
+
+            <p style="font-size: 12px; color: #999; margin-top: 15px; text-align: center;">
+                Você recebeu as credenciais por email após a compra
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://ntwgtpotspzmkhqbrcbp.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50d2d0cG90c3B6bWtocWJyY2JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQxMTA2NDIsImV4cCI6MjA5OTY4NjY0Mn0.x7C0M8d_T6YlK7s81eTwTVMHAnJwkJCwbSunVaxEqkw';
         
-        function copyPrompt(prompt) {
-            navigator.clipboard.writeText(prompt).then(() => {
-                alert('✅ Prompt copiado para a área de transferência!');
-            }).catch(err => {
-                console.error('Erro ao copiar:', err);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let currentUser = null;
+        let userPlan = null;
+        let selectedPlan = 'pro';
+
+        const PROMPTS = [
+            // PRIMEIROS 60 = BÁSICO
+            { cat: 'Copywriting', text: '✨ Crie uma copy persuasiva para vender um curso online de [TOPICO]', plan: 'basico' },
+            { cat: 'Copywriting', text: '✨ Escreva uma sequência de emails de promoção para [PRODUTO]', plan: 'basico' },
+            { cat: 'Copywriting', text: '✨ Desenvolva um headline irresistível para [NICHE]', plan: 'basico' },
+            { cat: 'Copywriting', text: '✨ Crie um case de sucesso fictício para [PRODUTO/SERVIÇO]', plan: 'basico' },
+            { cat: 'Copywriting', text: '✨ Escreva uma landing page para [PRODUTO]', plan: 'basico' },
+            { cat: 'Copywriting', text: '✨ Gere uma estratégia de reposicionamento para [MARCA]', plan: 'basico' },
+            { cat: 'Copywriting', text: '✨ Crie um funnel de vendas para [NEGÓCIO]', plan: 'basico' },
+            { cat: 'Copywriting', text: '✨ Escreva copy para [REDE SOCIAL] sobre [TOPICO]', plan: 'basico' },
+            { cat: 'Copywriting', text: '✨ Desenvolva uma proposta de valor para [PRODUTO]', plan: 'basico' },
+            { cat: 'Copywriting', text: '✨ Crie um roteiro de venda para [PRODUTO]', plan: 'basico' },
+            
+            { cat: 'Programação', text: '✨ Explique este código [CÓDIGO] como se ensinasse um iniciante', plan: 'basico' },
+            { cat: 'Programação', text: '✨ Debug: Analise este erro [ERRO] e sugira 3 soluções', plan: 'basico' },
+            { cat: 'Programação', text: '✨ Refatore este código [CÓDIGO] para melhor performance', plan: 'basico' },
+            { cat: 'Programação', text: '✨ Crie uma função em [LINGUAGEM] que faça [FUNCIONALIDADE]', plan: 'basico' },
+            { cat: 'Programação', text: '✨ Escreva testes unitários para [CODIGO]', plan: 'basico' },
+            { cat: 'Programação', text: '✨ Otimize o banco de dados para [QUERY]', plan: 'basico' },
+            { cat: 'Programação', text: '✨ Crie um API endpoint para [FUNCIONALIDADE]', plan: 'basico' },
+            { cat: 'Programação', text: '✨ Implemente autenticação JWT em [LINGUAGEM]', plan: 'basico' },
+            { cat: 'Programação', text: '✨ Resolva este problema de [PROBLEMA] em [LINGUAGEM]', plan: 'basico' },
+            { cat: 'Programação', text: '✨ Migre este código [CODIGO ANTIGO] para [NOVO PADRÃO]', plan: 'basico' },
+            
+            { cat: 'Design', text: '✨ Crie um briefing de design para [PROJETO]', plan: 'basico' },
+            { cat: 'Design', text: '✨ Desenvolva uma paleta de cores para [MARCA]', plan: 'basico' },
+            { cat: 'Design', text: '✨ Escreva especificações de UI/UX para [PRODUTO]', plan: 'basico' },
+            { cat: 'Design', text: '✨ Crie um conceito visual para [CAMPANHA]', plan: 'basico' },
+            { cat: 'Design', text: '✨ Desenvolva guidelines de branding para [EMPRESA]', plan: 'basico' },
+            { cat: 'Design', text: '✨ Crie wireframes descritivos para [APLICATIVO]', plan: 'basico' },
+            { cat: 'Design', text: '✨ Escreva copy para botões e CTAs em [INTERFACE]', plan: 'basico' },
+            { cat: 'Design', text: '✨ Analise acessibilidade de [DESIGN]', plan: 'basico' },
+            { cat: 'Design', text: '✨ Crie moodboard para [PROJETO]', plan: 'basico' },
+            { cat: 'Design', text: '✨ Desenvolva variações de [ELEMENTO DE DESIGN]', plan: 'basico' },
+            
+            { cat: 'Educação', text: '✨ Crie plano de aula para [TEMA]', plan: 'basico' },
+            { cat: 'Educação', text: '✨ Desenvolva currículo para curso de [ASSUNTO]', plan: 'basico' },
+            { cat: 'Educação', text: '✨ Escreva exercícios de prática para [CONCEITO]', plan: 'basico' },
+            { cat: 'Educação', text: '✨ Crie questões de avaliação sobre [TEMA]', plan: 'basico' },
+            { cat: 'Educação', text: '✨ Desenvolva material didático para [TOPICO]', plan: 'basico' },
+            { cat: 'Educação', text: '✨ Explique [CONCEITO COMPLEXO] com analogias simples', plan: 'basico' },
+            { cat: 'Educação', text: '✨ Crie casos de estudo para [DISCIPLINA]', plan: 'basico' },
+            { cat: 'Educação', text: '✨ Desenvolva glossário para [ÁREA DE CONHECIMENTO]', plan: 'basico' },
+            { cat: 'Educação', text: '✨ Crie quiz interativo sobre [TEMA]', plan: 'basico' },
+            { cat: 'Educação', text: '✨ Desenvolva roadmap de aprendizado para [SKILL]', plan: 'basico' },
+            
+            { cat: 'Redes Sociais', text: '✨ Crie calendário de conteúdo para [MÊS]', plan: 'basico' },
+            { cat: 'Redes Sociais', text: '✨ Escreva posts para [REDE SOCIAL] sobre [TOPICO]', plan: 'basico' },
+            { cat: 'Redes Sociais', text: '✨ Crie captions virais para [TIPO DE CONTEÚDO]', plan: 'basico' },
+            { cat: 'Redes Sociais', text: '✨ Desenvolva estratégia de hashtags para [NICHO]', plan: 'basico' },
+            { cat: 'Redes Sociais', text: '✨ Crie roteiro de vídeos curtos para [TEMA]', plan: 'basico' },
+            { cat: 'Redes Sociais', text: '✨ Escreva copy para Stories sobre [PRODUTO]', plan: 'basico' },
+            { cat: 'Redes Sociais', text: '✨ Crie série de carrosséis sobre [ASSUNTO]', plan: 'basico' },
+            { cat: 'Redes Sociais', text: '✨ Desenvolva estratégia de engajamento para [CONTA]', plan: 'basico' },
+            { cat: 'Redes Sociais', text: '✨ Crie resposta a comentários negativos sobre [SITUAÇÃO]', plan: 'basico' },
+            { cat: 'Redes Sociais', text: '✨ Escreva manifesto da marca para [EMPRESA]', plan: 'basico' },
+            
+            { cat: 'Negócios', text: '✨ Crie plano de negócios para [IDEIA]', plan: 'basico' },
+            { cat: 'Negócios', text: '✨ Desenvolva pitch deck para [STARTUP]', plan: 'basico' },
+            { cat: 'Negócios', text: '✨ Escreva proposta comercial para [CLIENTE]', plan: 'basico' },
+            { cat: 'Negócios', text: '✨ Crie análise competitiva para [MERCADO]', plan: 'basico' },
+            { cat: 'Negócios', text: '✨ Desenvolva estratégia de pricing para [PRODUTO]', plan: 'basico' },
+            { cat: 'Negócios', text: '✨ Crie modelo de receita para [NEGÓCIO]', plan: 'basico' },
+            { cat: 'Negócios', text: '✨ Escreva business plan para expansão de [EMPRESA]', plan: 'basico' },
+            { cat: 'Negócios', text: '✨ Analise viabilidade de [PROJETO]', plan: 'basico' },
+            { cat: 'Negócios', text: '✨ Crie KPIs e métricas para [OBJETIVO]', plan: 'basico' },
+            { cat: 'Negócios', text: '✨ Desenvolva estratégia de parcerias para [EMPRESA]', plan: 'basico' },
+            
+            // ÚLTIMOS 90 = PREMIUM
+            { cat: 'SEO', text: '✨ Otimize artigo para palavra-chave [KEYWORD]', plan: 'premium' },
+            { cat: 'SEO', text: '✨ Crie estratégia SEO para [SITE]', plan: 'premium' },
+            { cat: 'SEO', text: '✨ Analise competidores SEO de [NICHO]', plan: 'premium' },
+            { cat: 'SEO', text: '✨ Crie mapa de palavras-chave para [NEGÓCIO]', plan: 'premium' },
+            { cat: 'SEO', text: '✨ Escreva meta descriptions otimizadas para [PÁGINA]', plan: 'premium' },
+            { cat: 'SEO', text: '✨ Crie backlink strategy para [SITE]', plan: 'premium' },
+            { cat: 'SEO', text: '✨ Analise Core Web Vitals e sugira otimizações', plan: 'premium' },
+            { cat: 'SEO', text: '✨ Crie content pillar strategy para [TOPICO]', plan: 'premium' },
+            { cat: 'SEO', text: '✨ Otimize velocidade de [SITE]', plan: 'premium' },
+            { cat: 'SEO', text: '✨ Crie FAQ otimizado para [KEYWORD]', plan: 'premium' },
+            
+            { cat: 'Vendas', text: '✨ Crie script de cold call para [PRODUTO]', plan: 'premium' },
+            { cat: 'Vendas', text: '✨ Desenvolva processo de follow-up para [CLIENTE]', plan: 'premium' },
+            { cat: 'Vendas', text: '✨ Crie objeção handling para [PRODUTO]', plan: 'premium' },
+            { cat: 'Vendas', text: '✨ Escreva proposta de consultoria para [CLIENTE]', plan: 'premium' },
+            { cat: 'Vendas', text: '✨ Crie apresentação de vendas para [PRODUTO]', plan: 'premium' },
+            { cat: 'Vendas', text: '✨ Desenvolva estratégia de upsell para [CLIENTE]', plan: 'premium' },
+            { cat: 'Vendas', text: '✨ Crie negociação de preço para [SITUAÇÃO]', plan: 'premium' },
+            { cat: 'Vendas', text: '✨ Analise pipeline de vendas e sugira melhorias', plan: 'premium' },
+            { cat: 'Vendas', text: '✨ Crie email de recuperação de cliente perdido', plan: 'premium' },
+            { cat: 'Vendas', text: '✨ Desenvolva treinamento de vendas para [PRODUTO]', plan: 'premium' },
+            
+            { cat: 'Atendimento', text: '✨ Crie template de resposta para [TIPO DE DÚVIDA]', plan: 'premium' },
+            { cat: 'Atendimento', text: '✨ Desenvolva política de reembolso/devolução', plan: 'premium' },
+            { cat: 'Atendimento', text: '✨ Escreva script para lidar com cliente insatisfeito', plan: 'premium' },
+            { cat: 'Atendimento', text: '✨ Crie FAQ para [PRODUTO]', plan: 'premium' },
+            { cat: 'Atendimento', text: '✨ Desenvolva onboarding para novo cliente', plan: 'premium' },
+            { cat: 'Atendimento', text: '✨ Crie roteiro de atendimento via [CANAL]', plan: 'premium' },
+            { cat: 'Atendimento', text: '✨ Escreva email de desculpas profissional', plan: 'premium' },
+            { cat: 'Atendimento', text: '✨ Crie programa de fidelização para [CLIENTE]', plan: 'premium' },
+            { cat: 'Atendimento', text: '✨ Desenvolva treinamento de atendimento', plan: 'premium' },
+            { cat: 'Atendimento', text: '✨ Crie pesquisa de satisfação para [SERVIÇO]', plan: 'premium' },
+            
+            { cat: 'Conteúdo', text: '✨ Crie artigo de longa forma sobre [TOPICO]', plan: 'premium' },
+            { cat: 'Conteúdo', text: '✨ Escreva whitepaper para [TEMA]', plan: 'premium' },
+            { cat: 'Conteúdo', text: '✨ Crie roteiro de podcast sobre [ASSUNTO]', plan: 'premium' },
+            { cat: 'Conteúdo', text: '✨ Desenvolva webinar script para [TOPICO]', plan: 'premium' },
+            { cat: 'Conteúdo', text: '✨ Escreva newsletter sobre [TEMA]', plan: 'premium' },
+            { cat: 'Conteúdo', text: '✨ Crie roteiro de vídeo YouTube sobre [ASSUNTO]', plan: 'premium' },
+            { cat: 'Conteúdo', text: '✨ Desenvolva infográfico descritivo sobre [CONCEITO]', plan: 'premium' },
+            { cat: 'Conteúdo', text: '✨ Crie ebook sobre [TOPICO]', plan: 'premium' },
+            { cat: 'Conteúdo', text: '✨ Escreva case study completo para [CLIENTE]', plan: 'premium' },
+            { cat: 'Conteúdo', text: '✨ Crie webinar follow-up sequence', plan: 'premium' },
+            
+            { cat: 'Produtividade', text: '✨ Crie sistema de organização para [CONTEXTO]', plan: 'premium' },
+            { cat: 'Produtividade', text: '✨ Desenvolva routine matinal para [OBJETIVO]', plan: 'premium' },
+            { cat: 'Produtividade', text: '✨ Escreva plano de foco para [PROJETO]', plan: 'premium' },
+            { cat: 'Produtividade', text: '✨ Crie matriz Eisenhower para [TAREFAS]', plan: 'premium' },
+            { cat: 'Produtividade', text: '✨ Desenvolva time-blocking para [SEMANA]', plan: 'premium' },
+            { cat: 'Produtividade', text: '✨ Crie sistema de notas para [PROJETO]', plan: 'premium' },
+            { cat: 'Produtividade', text: '✨ Escreva rituais de encerramento diário', plan: 'premium' },
+            { cat: 'Produtividade', text: '✨ Crie checklist para [PROCESSO]', plan: 'premium' },
+            { cat: 'Produtividade', text: '✨ Desenvolva automação de [TAREFA REPETITIVA]', plan: 'premium' },
+            { cat: 'Produtividade', text: '✨ Crie goal setting framework para [OBJETIVO]', plan: 'premium' },
+            
+            { cat: 'Comunicação', text: '✨ Escreva apresentação profissional sobre [TEMA]', plan: 'premium' },
+            { cat: 'Comunicação', text: '✨ Crie email importante para [SITUAÇÃO]', plan: 'premium' },
+            { cat: 'Comunicação', text: '✨ Desenvolva carta de apresentação para [VAGA]', plan: 'premium' },
+            { cat: 'Comunicação', text: '✨ Escreva comunicado para [SITUAÇÃO DELICADA]', plan: 'premium' },
+            { cat: 'Comunicação', text: '✨ Crie apresentação para stakeholders', plan: 'premium' },
+            { cat: 'Comunicação', text: '✨ Desenvolva storytelling para [MARCA]', plan: 'premium' },
+            { cat: 'Comunicação', text: '✨ Escreva discurso para [OCASIÃO]', plan: 'premium' },
+            { cat: 'Comunicação', text: '✨ Crie mensagem de crise para [SITUAÇÃO]', plan: 'premium' },
+            { cat: 'Comunicação', text: '✨ Desenvolva feedback construtivo para [PESSOA]', plan: 'premium' },
+            { cat: 'Comunicação', text: '✨ Crie pitch elevator para [IDEIA]', plan: 'premium' },
+            
+            { cat: 'Análise', text: '✨ Analise dados de [FONTE] e crie relatório', plan: 'premium' },
+            { cat: 'Análise', text: '✨ Crie dashboard KPI para [DEPARTAMENTO]', plan: 'premium' },
+            { cat: 'Análise', text: '✨ Desenvolva análise de ROI para [CAMPANHA]', plan: 'premium' },
+            { cat: 'Análise', text: '✨ Escreva insights de [DADOS/MÉTRICA]', plan: 'premium' },
+            { cat: 'Análise', text: '✨ Crie previsão para [MÉTRICA]', plan: 'premium' },
+            { cat: 'Análise', text: '✨ Analise comportamento de [CLIENTE/USUÁRIO]', plan: 'premium' },
+            { cat: 'Análise', text: '✨ Desenvolva metodologia de teste A/B para [ELEMENTO]', plan: 'premium' },
+            { cat: 'Análise', text: '✨ Crie segmentação de [AUDIENCE]', plan: 'premium' },
+            { cat: 'Análise', text: '✨ Escreva relatório de performance para [PERÍODO]', plan: 'premium' },
+            { cat: 'Análise', text: '✨ Crie análise competitiva de [MERCADO]', plan: 'premium' },
+            
+            { cat: 'Criatividade', text: '✨ Brainstorm ideias para [PROJETO]', plan: 'premium' },
+            { cat: 'Criatividade', text: '✨ Crie name/tagline para [PRODUTO]', plan: 'premium' },
+            { cat: 'Criatividade', text: '✨ Desenvolva conceito criativo para [CAMPANHA]', plan: 'premium' },
+            { cat: 'Criatividade', text: '✨ Escreva copy criativo para [ANÚNCIO]', plan: 'premium' },
+            { cat: 'Criatividade', text: '✨ Crie história/narrativa para [MARCA]', plan: 'premium' },
+            { cat: 'Criatividade', text: '✨ Desenvolva metáfora/analogia para [CONCEITO]', plan: 'premium' },
+            { cat: 'Criatividade', text: '✨ Crie hook viral para [CONTEÚDO]', plan: 'premium' },
+            { cat: 'Criatividade', text: '✨ Brainstorm nomes alternativos para [EMPRESA]', plan: 'premium' },
+            { cat: 'Criatividade', text: '✨ Escreva flash fiction sobre [TEMA]', plan: 'premium' },
+            { cat: 'Criatividade', text: '✨ Crie personagem/persona para [PROJETO]', plan: 'premium' },
+            
+            { cat: 'Desenvolvimento Pessoal', text: '✨ Crie plano de desenvolvimento para [SKILL]', plan: 'premium' },
+            { cat: 'Desenvolvimento Pessoal', text: '✨ Escreva carta de motivação para [OBJETIVO]', plan: 'premium' },
+            { cat: 'Desenvolvimento Pessoal', text: '✨ Crie affirmações positivas para [DESAFIO]', plan: 'premium' },
+            { cat: 'Desenvolvimento Pessoal', text: '✨ Desenvolva plano de aprendizado para [IDIOMA]', plan: 'premium' },
+            { cat: 'Desenvolvimento Pessoal', text: '✨ Crie rotina de bem-estar para [CONTEXTO]', plan: 'premium' },
+            { cat: 'Desenvolvimento Pessoal', text: '✨ Escreva journal prompts para [REFLEXÃO]', plan: 'premium' },
+            { cat: 'Desenvolvimento Pessoal', text: '✨ Crie plano de fitness para [OBJETIVO]', plan: 'premium' },
+            { cat: 'Desenvolvimento Pessoal', text: '✨ Desenvolva mindfulness meditation para [TEMA]', plan: 'premium' },
+            { cat: 'Desenvolvimento Pessoal', text: '✨ Crie career roadmap para [PROFISSÃO]', plan: 'premium' },
+            { cat: 'Desenvolvimento Pessoal', text: '✨ Escreva life goals framework para [PERÍODO]', plan: 'premium' },
+        ];
+
+        async function inicializar() {
+            try {
+                const { data: { user } } = await supabaseClient.auth.getUser();
+                if (user) {
+                    currentUser = user;
+                    const { data } = await supabaseClient
+                        .from('promptpalm_users')
+                        .select('product_name')
+                        .eq('email', user.email)
+                        .single();
+                    
+                    userPlan = data?.product_name?.includes('Pro') ? 'pro' : 'basico';
+                    mostrarUsuario();
+                } else {
+                    mostrarAnonimoAtualizar();
+                }
+            } catch (error) {
+                console.error('Erro ao verificar auth:', error);
+                mostrarAnonimoAtualizar();
+            }
+            carregarPrompts();
+        }
+
+        function mostrarUsuario() {
+            document.getElementById('buyBtn').style.display = 'none';
+            document.getElementById('userMenu').classList.add('active');
+            document.getElementById('userEmail').textContent = currentUser?.email || '';
+            document.getElementById('acessoPrompts').textContent = userPlan === 'pro' ? '150' : '60';
+            document.getElementById('loginRequired').style.display = 'none';
+        }
+
+        function mostrarAnonimoAtualizar() {
+            document.getElementById('buyBtn').style.display = 'block';
+            document.getElementById('userMenu').classList.remove('active');
+            document.getElementById('loginRequired').style.display = 'block';
+        }
+
+        function carregarPrompts() {
+            const grid = document.getElementById('promptsGrid');
+            grid.innerHTML = '';
+
+            PROMPTS.forEach(prompt => {
+                const card = document.createElement('div');
+                card.className = 'prompt-card';
+                
+                let html = `
+                    <div class="prompt-category">${prompt.cat}</div>
+                    <div class="prompt-badge ${prompt.plan === 'basico' ? 'badge-basic' : 'badge-premium'}">
+                        ${prompt.plan === 'basico' ? '✓ BÁSICO' : '⭐ PREMIUM'}
+                    </div>
+                    <div class="prompt-text">${prompt.text}</div>
+                `;
+
+                // Verificar acesso
+                const temAcesso = !currentUser ? false : (userPlan === 'pro' || prompt.plan === 'basico');
+                
+                if (!temAcesso && currentUser) {
+                    card.classList.add('restricted');
+                    html += '<button class="copy-btn" disabled>🔒 Plano PRO</button>';
+                } else {
+                    html += `<button class="copy-btn" onclick="copiarPrompt('${prompt.text.replace(/'/g, "\\'")}')">📋 Copiar</button>`;
+                }
+
+                card.innerHTML = html;
+                grid.appendChild(card);
             });
         }
-        
-        function searchPrompts() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const prompts = document.querySelectorAll('.prompt-card');
+
+        function copiarPrompt(texto) {
+            if (!currentUser) {
+                abrirLogin();
+                return;
+            }
             
-            prompts.forEach(prompt => {
-                const text = prompt.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    prompt.style.display = 'block';
-                } else {
-                    prompt.style.display = 'none';
+            navigator.clipboard.writeText(texto);
+            alert('✅ Prompt copiado!');
+        }
+
+        function abrirCompra() {
+            document.getElementById('compraModal').classList.add('active');
+        }
+
+        function abrirLogin() {
+            document.getElementById('loginModal').classList.add('active');
+        }
+
+        function fecharModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function selecionarPlano(plano) {
+            selectedPlan = plano;
+            document.querySelectorAll('.plan-card').forEach(card => card.classList.remove('selected'));
+            event.target.closest('.plan-card').classList.add('selected');
+            
+            const links = {
+                'basic': 'https://pay.kiwify.com.br/eK8meT0',
+                'pro': 'https://pay.kiwify.com.br/oNhtJ9N'
+            };
+            document.getElementById('checkoutLink').href = links[plano];
+        }
+
+        async function fazerLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                mostrarErroLogin('Preencha todos os campos');
+                return;
+            }
+
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                
+                if (error) throw new Error(error.message);
+                
+                currentUser = data.user;
+                const { data: userData } = await supabaseClient
+                    .from('promptpalm_users')
+                    .select('product_name')
+                    .eq('email', email)
+                    .single();
+                
+                userPlan = userData?.product_name?.includes('Pro') ? 'pro' : 'basico';
+                
+                fecharModal('loginModal');
+                mostrarUsuario();
+                carregarPrompts();
+            } catch (error) {
+                mostrarErroLogin('Email ou senha incorretos');
+            }
+        }
+
+        function mostrarErroLogin(msg) {
+            document.getElementById('loginError').textContent = msg;
+            document.getElementById('loginError').classList.add('active');
+            setTimeout(() => document.getElementById('loginError').classList.remove('active'), 3000);
+        }
+
+        async function fazerLogout() {
+            await supabaseClient.auth.signOut();
+            currentUser = null;
+            userPlan = null;
+            mostrarAnonimoAtualizar();
+            carregarPrompts();
+        }
+
+        function filtrar(tipo) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const cards = document.querySelectorAll('.prompt-card');
+            cards.forEach(card => {
+                if (tipo === 'todos') {
+                    card.style.display = 'block';
+                } else if (tipo === 'basico') {
+                    card.style.display = card.textContent.includes('BÁSICO') ? 'block' : 'none';
+                } else if (tipo === 'premium') {
+                    card.style.display = card.textContent.includes('PREMIUM') ? 'block' : 'none';
                 }
             });
         }
-        
-        // Teclado atalho
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.key === 'f') {
-                e.preventDefault();
-                document.getElementById('searchInput').focus();
-            }
-        });
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', inicializar);
     </script>
 </body>
 </html>
