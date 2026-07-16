@@ -1,1 +1,497 @@
- 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromptPalm - Biblioteca de Prompts</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .auth-box, .content-box {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+
+        .auth-box.active, .content-box.active {
+            display: block;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="email"]:focus, input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .error.active {
+            display: block;
+        }
+
+        .success {
+            background: #efe;
+            color: #3c3;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .success.active {
+            display: block;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: #666;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .prompts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .prompt-card {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .prompt-card:hover {
+            background: #f0f0f0;
+            transform: translateX(5px);
+        }
+
+        .prompt-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .prompt-text {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.5;
+            max-height: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .copy-btn {
+            margin-top: 10px;
+            padding: 6px 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .copy-btn:hover {
+            background: #764ba2;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .logout-btn {
+            padding: 6px 12px;
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .logout-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f0f0f0;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .categories-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .category-btn {
+            padding: 6px 12px;
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .category-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- AUTH BOX -->
+        <div class="auth-box active" id="authBox">
+            <div class="logo">
+                <h1>🤖 PromptPalm</h1>
+                <p>Biblioteca de Prompts para Claude AI</p>
+            </div>
+
+            <div id="authError" class="error"></div>
+
+            <div id="loginForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="password" placeholder="sua senha" required>
+                </div>
+                <button onclick="handleLogin()">Entrar</button>
+            </div>
+
+            <div style="margin-top: 20px; text-align: center; color: #666; font-size: 14px;">
+                <p>Só membros do PromptPalm podem acessar 🔒</p>
+                <p style="margin-top: 10px; font-size: 12px; color: #999;">
+                    Use a senha que você recebeu por email após a compra
+                </p>
+            </div>
+        </div>
+
+        <!-- CONTENT BOX -->
+        <div class="content-box" id="contentBox">
+            <div class="header">
+                <div>
+                    <h2 style="color: #333; margin-bottom: 5px;">📚 Meus Prompts</h2>
+                    <div class="user-info" id="userEmail"></div>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">Sair</button>
+            </div>
+
+            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Buscar prompts...">
+
+            <div class="categories-container" id="categoriesContainer"></div>
+
+            <div id="contentLoading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p style="margin-top: 10px;">Carregando prompts...</p>
+            </div>
+
+            <div class="prompts-grid" id="promptsGrid"></div>
+
+            <div id="contentError" class="error"></div>
+        </div>
+    </div>
+
+    <script>
+        // Supabase Config
+        const SUPABASE_URL = 'https://ntwgtpotspzmkhqbrcbp.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50d2d0cG90c3B6bWtocWJyY2JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODk5NTQwMDAsImV4cCI6MTk5OTk5OTk5OX0.dummy_key';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Prompts de exemplo (em produção viriam do banco)
+        const PROMPTS = [
+            { category: 'Escrita', title: 'Artigo de Blog', text: 'Escreva um artigo de blog sobre [TEMA] em tom profissional e engajante, com introdução, 3 seções principais e conclusão.' },
+            { category: 'Escrita', title: 'Email Profissional', text: 'Redija um email profissional para [DESTINATÁRIO] sobre [ASSUNTO], mantendo tom cortês e objetivo.' },
+            { category: 'Programação', title: 'Explicar Código', text: 'Explique este código [CÓDIGO] de forma simples e didática, como se estivesse ensinando a um iniciante.' },
+            { category: 'Programação', title: 'Debug', text: 'Analise este erro [ERRO] e sugira 3 possíveis soluções com exemplos de código.' },
+            { category: 'Marketing', title: 'Copy de Anúncio', text: 'Crie uma copy convincente para anúncio do produto [PRODUTO] com gatilhos psicológicos e call-to-action.' },
+            { category: 'Marketing', title: 'Estratégia Social', text: 'Desenvolva uma estratégia de conteúdo para [REDE_SOCIAL] com 5 tipos de posts e exemplos.' },
+            { category: 'Análise', title: 'Resumo Executivo', text: 'Crie um resumo executivo de [DOCUMENTO] em máximo 200 palavras com os pontos-chave.' },
+            { category: 'Análise', title: 'Crítica Construtiva', text: 'Analise [TEXTO] e dê feedback construtivo com pontos fortes e áreas de melhoria.' },
+            { category: 'Criatividade', title: 'Brainstorm', text: 'Gere 10 ideias criativas sobre [TEMA] que sejam originais e implementáveis.' },
+            { category: 'Criatividade', title: 'História', text: 'Escreva uma história curta sobre [CENÁRIO] com personagens interessantes e plot twist.' },
+        ];
+
+        let currentUser = null;
+
+        // Inicializar
+        async function init() {
+            checkAuth();
+        }
+
+        async function checkAuth() {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    currentUser = user;
+                    showContent();
+                } else {
+                    showAuth();
+                }
+            } catch (error) {
+                showAuth();
+            }
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                showError('Por favor, preencha todos os campos', 'authError');
+                return;
+            }
+
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                
+                if (error) throw error;
+                
+                currentUser = data.user;
+                showContent();
+            } catch (error) {
+                showError('Email ou senha incorretos. Verifique os dados enviados por email.', 'authError');
+            }
+        }
+
+        async function handleLogout() {
+            await supabase.auth.signOut();
+            currentUser = null;
+            showAuth();
+        }
+
+        function showAuth() {
+            document.getElementById('authBox').classList.add('active');
+            document.getElementById('contentBox').classList.remove('active');
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function showContent() {
+            document.getElementById('authBox').classList.remove('active');
+            document.getElementById('contentBox').classList.add('active');
+            document.getElementById('userEmail').textContent = currentUser?.email || '';
+            loadPrompts();
+            loadCategories();
+        }
+
+        function loadPrompts(filter = 'Todos') {
+            const filtered = filter === 'Todos' ? PROMPTS : PROMPTS.filter(p => p.category === filter);
+            const grid = document.getElementById('promptsGrid');
+            grid.innerHTML = '';
+
+            filtered.forEach(prompt => {
+                const card = document.createElement('div');
+                card.className = 'prompt-card';
+                card.innerHTML = `
+                    <div class="prompt-title">${prompt.title}</div>
+                    <div class="prompt-text">${prompt.text}</div>
+                    <button class="copy-btn" onclick="copyPrompt('${prompt.text.replace(/'/g, "\\'")}')">📋 Copiar</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function loadCategories() {
+            const categories = ['Todos', ...new Set(PROMPTS.map(p => p.category))];
+            const container = document.getElementById('categoriesContainer');
+            container.innerHTML = '';
+
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'category-btn' + (cat === 'Todos' ? ' active' : '');
+                btn.textContent = cat;
+                btn.onclick = () => {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    loadPrompts(cat);
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function copyPrompt(text) {
+            navigator.clipboard.writeText(text);
+            alert('✅ Prompt copiado para a área de transferência!');
+        }
+
+        function showError(message, elementId) {
+            const errorDiv = document.getElementById(elementId);
+            errorDiv.textContent = message;
+            errorDiv.classList.add('active');
+            setTimeout(() => errorDiv.classList.remove('active'), 5000);
+        }
+
+        // Busca
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchBox = document.getElementById('searchBox');
+            if (searchBox) {
+                searchBox.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase();
+                    const cards = document.querySelectorAll('.prompt-card');
+                    cards.forEach(card => {
+                        const text = card.textContent.toLowerCase();
+                        card.style.display = text.includes(query) ? 'block' : 'none';
+                    });
+                });
+            }
+            init();
+        });
+    </script>
+</body>
+</html>
